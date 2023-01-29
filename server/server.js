@@ -5,7 +5,7 @@ const app = express()
 // i.e. all requests are being logged here prior to the 
 // server handling them.
 app.use(function(req, res, next){
-    console.log("Request recieved at " + Date.now());
+    console.log("New Request Recieved ");
     console.log("HTTP Method: " + req.method);
     console.log("Path: " + req.path);
     next();
