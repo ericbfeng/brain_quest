@@ -18,6 +18,7 @@ npm run dev
 
 ### Terminal 2 (Launching Client):
 ```
+cd client
 npm install
 npm start
 ```
