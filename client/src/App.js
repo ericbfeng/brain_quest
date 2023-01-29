@@ -1,5 +1,6 @@
 import React from 'react';
 import './styles/App.css';
+import SimpleComponent from './components/SimpleComponent';
 
 class App extends React.Component {
 
@@ -31,13 +32,25 @@ class App extends React.Component {
         <div className="class-with-red-text">
           Please call '/some-api' from the backend by clicking below!
         </div>
+
         <button onClick={this.handleClick}>Call API</button>
+
+        <br></br>
+        <br></br>
 
         <div className="class-with-blue-text">
           Current API Response: 
         </div>
 
         {this.state.apiResponse}
+
+        <br></br>
+        <br></br>
+
+        <div>
+          The component below was imported from 'src/components'
+        </div>
+        <SimpleComponent startingCount={10}/>
       </div>
     );
   }
