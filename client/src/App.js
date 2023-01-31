@@ -1,14 +1,19 @@
 import React from 'react';
 import RegistrationForm from './components/RegistrationForm';
-import Home from './components/Home';
+import RoutesController from './components/RoutesController';
 import { connect } from "react-redux";
+import TopBar from './components/TopBar'
 import './styles/App.css';
 
 class App extends React.Component {
   render() {
     return (
       <div>
-        {this.props.isLoggedIn ? <Home />: <RegistrationForm />}
+        <TopBar />
+        {this.props.isLoggedIn ? 
+          <RoutesController />:
+          <RegistrationForm />
+        }
       </div>
     );
   }

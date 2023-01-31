@@ -1,0 +1,12 @@
+.session-button {
+    padding: 6px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+}
+
+.enabled:hover {
+    background: #2c3e50;
+}

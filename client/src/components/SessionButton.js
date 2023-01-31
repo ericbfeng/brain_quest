@@ -1,10 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import { loginUser, logoutUser } from "../actions/sessionActions";
+import '../styles/SessionButton.css';
 
 interface SessionButtonProps {
   enteredUsername: string,
   enteredPasssword: string,
+  onLogout: () => void,
 }
 
 class SessionButton extends React.Component<SessionButtonProps> {
@@ -17,10 +19,13 @@ class SessionButton extends React.Component<SessionButtonProps> {
         password: this.props.enteredPasssword
       })
     })
-    .then(res => res.json())
+    .then((res) => {
+      if(!res.ok) throw new Error(res.statusText);
+      else return res.json();
+    })
     .then(
       (result) => this.props.loginUser(result),
-      (error) => alert("Login failure!")
+      (error) => alert("Login failure: " + error.message)
     )
   }
   
@@ -28,7 +33,12 @@ class SessionButton extends React.Component<SessionButtonProps> {
     fetch(`/logout`)
     .then(res => res.json())
     .then(
-      (result) => this.props.logoutUser(result),
+      (result) => {
+        this.props.logoutUser(result);
+
+        // Clear the local state of parent component (TopBar.js)
+        this.props.onLogout();
+      },
       (error) => alert("Logout failure!")
     )
   }
@@ -39,12 +49,15 @@ class SessionButton extends React.Component<SessionButtonProps> {
           {
             this.props.isLoggedIn ? 
               <button 
-                onClick={this.handleLogoutClick}>
+                onClick={this.handleLogoutClick}
+                className="session-button enabled">
                   Logout
               </button> :
               <button 
                 onClick={this.handleLoginClick} 
-                disabled={!this.props.enteredPasssword || !this.props.enteredUsername}>
+                disabled={!this.props.enteredPasssword || !this.props.enteredUsername}
+                className={this.props.enteredPasssword && this.props.enteredUsername ? "session-button enabled": "session-button"}
+                >
                   Login
               </button>
           }

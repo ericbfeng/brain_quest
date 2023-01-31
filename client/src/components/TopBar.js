@@ -2,6 +2,8 @@ import React from 'react';
 import SessionName from './SessionName';
 import SessionButton from './SessionButton';
 import SessionInput from './SessionInput';
+import { connect } from "react-redux";
+import '../styles/TopBar.css';
 
 class TopBar extends React.Component {
     constructor(props) {
@@ -24,24 +26,41 @@ class TopBar extends React.Component {
         })
     }
 
+    onLogoutSubmit = () => {
+        // Fixes bug where a user logs in, logs out, then is able to login
+        // again without entering a username and password. Has to do with the fact
+        // that we are holding local state here for the entered password / username.
+        this.setState({
+            password: "",
+            username: ""
+        })
+    }
+
     render() {
       return (
-        <div>
-            <span>
-                <SessionName /> 
+        <div className="top-bar-container">
+            <div>
+                <SessionName/> 
                 <SessionInput 
-                    onSubmit={this.handleSubmit}
                     onUsernameChange={this.handleUsernameChange}
                     onPasswordChange={this.handlePasswordChange}
                 />
-                <SessionButton
-                    enteredPasssword={this.state.password}
-                    enteredUsername={this.state.username}
-                />
-            </span>
+            </div>
+            <SessionButton
+                enteredPasssword={this.state.password}
+                enteredUsername={this.state.username}
+                onLogout={this.onLogoutSubmit}
+                className="top-bar-button"
+            />
         </div>
       );
     }
   }
 
-export default TopBar;
+const mapStateToProps = state => ({
+    isLoggedIn: state.session.isLoggedIn,
+});
+
+const mapActionsToProps = () => ({});
+
+export default connect(mapStateToProps, mapActionsToProps())(TopBar);
