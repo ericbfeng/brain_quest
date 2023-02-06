@@ -2,6 +2,7 @@ import React from 'react';
 import SessionName from './SessionName';
 import SessionButton from './SessionButton';
 import SessionInput from './SessionInput';
+import { connect } from "react-redux";
 import '../styles/TopBar.css';
 
 class TopBar extends React.Component {
@@ -56,4 +57,10 @@ class TopBar extends React.Component {
     }
   }
 
-export default TopBar;
+const mapStateToProps = state => ({
+    isLoggedIn: state.session.isLoggedIn,
+});
+
+const mapActionsToProps = () => ({});
+
+export default connect(mapStateToProps, mapActionsToProps())(TopBar);
