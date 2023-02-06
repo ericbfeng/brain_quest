@@ -15,6 +15,7 @@
         <form id = "reg-form">
             <input type="text" autocomplete="off" id="username" placeholder="Username" />
             <input type="password" autocomplete="off" id="password" placeholder="Password" />
+            <input type="occupation" autocomplete="off" id="occupation" placeholder="Occupation" />
             <input type="submit" value="Register Account" />
         </form>
         <script>
@@ -26,7 +27,7 @@
                 event.preventDefault()
                 const username = document.getElementById('username').value
                 const password = document.getElementById('password').value
-                
+                const occupation = document.getElementById('occupation').value
 
                 fetch('http://localhost:8081/register', {
                     method: 'POST',
@@ -35,7 +36,8 @@
                     },
                     body: JSON.stringify({
                         username, 
-                        password
+                        password,
+                        occupation
                     })
                 }).then((res) => res.json())
 
