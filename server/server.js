@@ -1,6 +1,8 @@
 const express = require("express");
 const session = require("express-session");
+const path = require("node:path");
 const app = express();
+const cors = require("cors");
 const mongoose = require("mongoose");
 
 // Import schemas for DB.
@@ -25,6 +27,10 @@ connect();
 // Middleware functions called before any API (such as /login)
 app.use(express.json());
 
+app.use(cors({
+    origin: '*'
+}));
+
 app.use(function(req, res, next){
     console.log("New Request Recieved ");
     console.log("HTTP Method: " + req.method);
@@ -33,15 +39,22 @@ app.use(function(req, res, next){
     next();
  });
 
- app.use(session({
-    secret: "This is a very safe secret that crypography couldn't crack",
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 1, // 1 HOUR
-    }
- }));
+
+// app.use(express.static('../client/public'));
+// console.log()
+//app.use(bodyParser.json());
+
+
+//  app.use(session({
+//     secret: "This is a very safe secret that crypography couldn't crack",
+//     saveUninitialized: false,
+//     cookie: {
+//         maxAge: 1000 * 60 * 60 * 1, // 1 HOUR
+//     }
+//  }));
 
 app.post("/register", (req, res) => {
+    console.log(res.body)
     const {userName, password} = req.body;
 
     User.find({
@@ -153,4 +166,4 @@ app.get("/logout", (req, res) => {
     })
 })
 
-app.listen(5000, () => {console.log(("Server started on port 5000"))});
+app.listen(8081, () => {console.log(("Server started on port 8081"))});
