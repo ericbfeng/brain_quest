@@ -1,3 +1,19 @@
 body{
-    background: linear-gradient(to right, #2c3e50, #8294a1);
+    background-color: #DFD5EC;
+}
+
+.app-container{
+    display: flex;
+    flex-direction: column;
+    height: 97vh;
+}
+
+.app-body-screen{
+    margin-top: 20px;
+    background-color: white;
+    flex-grow: 1;
+}
+
+.app-head-screen{
+    height: 60px;
 }

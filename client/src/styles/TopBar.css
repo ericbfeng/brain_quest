@@ -1,7 +1,31 @@
-.top-bar-container {
-    height: 30px;
+.main-container {
+    height: 40px;
     display: flex;
     justify-content: space-between;
     padding: 10px;
-    background-color: #e9e9e9;
+    background-color: #FFB786;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.logo-photo {
+    border-radius: 100% 100%;
+    width: 40px;
+}
+
+.website-name-container {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.website-name-text {
+    color: #2F7AC4;
+    width: 200px;
+    font-weight: 1000;
+    font-size: x-large;
+}
+
+.icon-container {
+    width: 30px;
 }

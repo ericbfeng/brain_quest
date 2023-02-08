@@ -1,59 +1,27 @@
 import React from 'react';
-import SessionName from './SessionName';
-import SessionButton from './SessionButton';
-import SessionInput from './SessionInput';
+import { useSelector } from "react-redux";
+import logo from '../logo.png';
+import PersonIcon from './PersonIcon';
 import '../styles/TopBar.css';
 
-class TopBar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: "",
-            password: ""
-        };
-      }
-
-    handleUsernameChange = (event) => {
-        this.setState({
-            username: event.target.value
-        })
-    }
-
-    handlePasswordChange = (event) => {
-        this.setState({
-            password: event.target.value
-        })
-    }
-
-    onLogoutSubmit = () => {
-        // Fixes bug where a user logs in, logs out, then is able to login
-        // again without entering a username and password. Has to do with the fact
-        // that we are holding local state here for the entered password / username.
-        this.setState({
-            password: "",
-            username: ""
-        })
-    }
-
-    render() {
-      return (
-        <div className="top-bar-container">
+export default function TopBar() {
+    const isLoggedIn = useSelector((state) => state.session.isLoggedIn);
+    return (
+        <div className="main-container">
             <div>
-                <SessionName/> 
-                <SessionInput 
-                    onUsernameChange={this.handleUsernameChange}
-                    onPasswordChange={this.handlePasswordChange}
-                />
+                <img className="logo-photo" src={logo} alt="Website Logo"/>
             </div>
-            <SessionButton
-                enteredPasssword={this.state.password}
-                enteredUsername={this.state.username}
-                onLogout={this.onLogoutSubmit}
-                className="top-bar-button"
-            />
+            <div className="website-name-container">
+                <div className="website-name-text">
+                    BRAIN QUEST
+                </div>
+            </div>
+            <div className="icon-container">
+                {isLoggedIn ? 
+                    <PersonIcon/>:
+                    null
+                }
+            </div>
         </div>
-      );
-    }
-  }
-
-export default TopBar;
+    );
+}

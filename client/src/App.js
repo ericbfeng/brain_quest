@@ -1,28 +1,23 @@
 import React from 'react';
-import RegistrationForm from './components/RegistrationForm';
+import LoginPage from './components/LoginPage';
 import RoutesController from './components/RoutesController';
-import { connect } from "react-redux";
-import TopBar from './components/TopBar'
+import { useSelector } from "react-redux";
+import TopBar from './components/TopBar';
 import './styles/App.css';
 
-class App extends React.Component {
-  render() {
-    return (
-      <div>
+export default function App() {
+  const isLoggedIn = useSelector((state) => state.session.isLoggedIn);
+  return (
+    <div className="app-container">
+      <div className="app-head-screen">
         <TopBar />
-        {this.props.isLoggedIn ? 
+      </div>
+      <div className="app-body-screen">
+        {isLoggedIn ? 
           <RoutesController />:
-          <RegistrationForm />
+          <LoginPage />
         }
       </div>
-    );
-  }
+    </div>
+  );
 }
-
-const mapStateToProps = state => ({
-  isLoggedIn: state.session.isLoggedIn,
-});
-
-const mapActionsToProps = () => ({});
-
-export default connect(mapStateToProps, mapActionsToProps())(App)
