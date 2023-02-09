@@ -1,15 +1,19 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import TestBankPage from './TestBankPage';
+import SoloProblemPage from './SoloProblemPage';
+import HomePage from './HomePage';
+import ProfilePage from './ProfilePage';
 
 class RoutesController extends React.Component {
-    // The idea would be to make components / pages and have routes.
-    // The user would be able to navigate between routes by using <Link>
-    // Example: There might be a link that says "profile".
     render() {
       return (
         <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<div> Home Page </div>} />
+            <Routes>    
+                <Route path="/" element={<HomePage />} />
+                <Route path="/soloproblempage/:questionId" element={<SoloProblemPage/>}/>
+                <Route path="/testbankpage" element={<TestBankPage/>} />
+                <Route path="/profilepage" element={<ProfilePage/>} />
             </Routes>
         </BrowserRouter>
       );

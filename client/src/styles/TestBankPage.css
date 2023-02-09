@@ -1,0 +1,145 @@
+.test-bank-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.test-bank-subheader {
+    background-color: #FFDCC6;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5px;
+    height: 40px;
+}
+
+.test-bank-prompt {
+    flex-grow: 1;
+    margin: 20px;
+    background-color: #FFDCC6;
+}
+
+.test-bank-prompt-header {
+    text-align: center;
+    font-size: 57px; 
+    margin-left: 45px;
+    margin-right: 45px;
+    margin-top: 120px;
+}
+
+.test-bank-prompt-text {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 25px; 
+    margin-left: 45px;
+    margin-right: 45px;
+}
+
+.test-bank-subheader-item {
+    width: 100px;
+    height: 40px;
+    background-color: #D8782C;
+    cursor: pointer;
+    color: #D3E4FF;
+    border-radius: 10% 10%;
+    border: none;
+}
+
+.test-bank-dropdown-container {
+    width: 100px;
+    height: 40px;
+  }
+
+.test-bank-subtype {
+    position: absolute;
+    list-style-type: none;
+    margin: 0px 0px;
+    padding: 0;
+    border: 1px solid grey;
+    width: 100px;
+}
+
+.test-bank-subtype > li {
+    margin: 0;
+    background-color: white;
+}
+
+.test-bank-subtype > li:hover {
+    background-color: lightgray;
+}
+
+.test-bank-subtype > li > button {
+    width: 100%;
+    height: 100%;
+    text-align: left;
+
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 5px;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+.question-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    padding: 20px;
+    background-color: #FFDCC6;
+}
+
+.question-header {
+    height: 50px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 1000;
+    font-size: x-large;
+    color: #2F7AC4;
+    border-bottom: 2px solid black;
+}
+
+.question-list {
+    height: 100%;
+    display: flex;
+    padding: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.question-list>* {
+    flex: 0 0 160px;
+  }
+
+.question-list-item-solved {
+    width: 40px;
+    height: 40px;
+    border: 5px solid green;
+}
+
+.question-list-item-unsolved {
+    width: 40px;
+    height: 40px;
+    border: 5px solid red;
+}
+
+.question-icon {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.arrow-icon-container {
+    width: 40px;
+    height: 40px;
+}
+
+.arrow-icon {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}

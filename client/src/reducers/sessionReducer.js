@@ -1,4 +1,4 @@
- import { LOGIN_USER, LOGOUT_USER } from "../actions/types";
+ import { LOGIN_USER, LOGOUT_USER, UPDATE_USER } from "../actions/types";
 
  const initialState = {
     isLoggedIn: false,
@@ -6,6 +6,7 @@
     userInformation: {
         username: string
         password: string
+        questionsSolved: []
     }
     */
     userInformation: {}
@@ -23,6 +24,11 @@
             return {
                 ...state,
                 isLoggedIn: action.payload.isLoggedIn,
+                userInformation: action.payload.userInformation,
+            }
+        case UPDATE_USER:
+            return {
+                ...state,
                 userInformation: action.payload.userInformation,
             }
         default:

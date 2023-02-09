@@ -48,7 +48,6 @@ app.post("/register", (req, res) => {
         username: userName
     }, (err, result) => {
         if(err){
-            console.log("HERE ERROR");
             res.statusMessage = "User registration failed";
             return res.status(500).end();
         } else if (result.length > 0) {
@@ -59,10 +58,9 @@ app.post("/register", (req, res) => {
             User.create({
                 username: userName,
                 password: password,
+                record: [],
             }, (err, result) => {
                 if(err) {
-                    console.log(userName);
-                    console.log(err);
                     res.statusMessage = "User registration failed";
                     return res.status(500).end();
                 } else {
@@ -98,10 +96,47 @@ app.post("/login", (req, res) => {
                 isLoggedIn: true,
                 userInformation: {
                     username: req.body.username,
-                    password: req.body.password
+                    password: req.body.password,
+                    record: result[0].record,
                 }
              })
         }
+    });
+});
+
+app.post("/add-correct-question-id", (req, res) => {
+    const {questionId} = req.body;
+
+    User.updateOne(
+        {username: req.session.username},
+        {$push:{"record": parseInt(questionId)}},
+        (err, result) => {
+            if(err){
+                res.statusMessage = "Record was unable to be updated.";
+                return res.status(500).end();
+            } else {
+                // The user's record was updated! Now we need to get the
+                // user and return the new userInformation.
+                User.find({
+                    username: req.session.username,
+                }, (err, result) => {
+                    if(err){
+                        res.statusMessage = "Record was unable to be updated.";
+                        return res.status(500).end();
+                    } else if (result.length == 0){
+                        res.statusMessage = "Username or password incorrect.";
+                        return res.status(500).end();
+                    } else {
+                        return res.status(200).send({ 
+                            userInformation: {
+                                username: result[0].username,
+                                password: result[0].password,
+                                record: result[0].record,
+                            }
+                         })
+                    }
+                });
+            }
     });
 });
 
