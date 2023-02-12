@@ -13,6 +13,8 @@ export default function HomePage() {
         <Link to="/testbankpage">TestBankPage</Link>
         <br></br>
         <Link to="/profilepage">ProfilePage</Link>
+        <br></br>
+        <Link to="/communitypage">CommunityPage</Link>
       </div>
     );
   }

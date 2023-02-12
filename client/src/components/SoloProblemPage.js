@@ -3,6 +3,7 @@ import {Link, useParams} from "react-router-dom";
 import { allQuestions } from '../question_bank/questions';
 import { connect } from "react-redux";
 import { updateUser } from "../actions/sessionActions";
+import { BsPatchQuestionFill, BsArrowLeftShort } from 'react-icons/bs';
 import '../styles/SoloProblemPage.css';
 
 class AnswerChoices extends React.Component {
@@ -83,17 +84,33 @@ function SoloProblemPage({updateUser}) {
           )
     };
 
+    const getQuestionMetadata = () => {
+      return <div>
+        {question.type + " " + question.subType}
+      </div>
+    }
+
     return (
       <div className="solo-problem-page-container">
-        <Link to="/testbankpage">Go Back To TestBankPage</Link>
-        <h3>Question ID:</h3>
-        {questionId}
-        <h3>Question's Problem:</h3>
-        {question.question}
-        <h3>Question's Choices:</h3>
-        <AnswerChoices choices={question.choices} onSubmit={onAnswerSubmission} />
-        <h3>Question's Answer:</h3>
-        {question.answer}
+        <div className="solo-problem-page-subheader-container">
+          <Link className="arrow-icon-container" to="/testbankpage">
+            <BsArrowLeftShort className="arrow-icon" />
+          </Link>
+          <div>
+            {getQuestionMetadata()}
+          </div>
+          <Link className="arrow-icon-container" to="/">
+            Exit
+          </Link>
+        </div>
+        <div className="solo-problem-page-body-container">
+          <div className="solo-problem-page-body-question">
+            {question.question}
+          </div>
+          <div className="solo-problem-page-body-choices">
+            <AnswerChoices choices={question.choices} onSubmit={onAnswerSubmission} />
+          </div>
+        </div>
       </div>
     );
   }

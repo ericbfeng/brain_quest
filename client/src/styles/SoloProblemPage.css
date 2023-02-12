@@ -2,4 +2,30 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
+    height: 95%;
+}
+
+.solo-problem-page-subheader-container {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+}
+
+.solo-problem-page-body-container {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.solo-problem-page-body-question {
+    width: 60%;
+}
+
+.solo-problem-page-body-choices {
+    flex-grow: 1;
+}
+
+.arrow-icon-container {
+    width: 40px;
+    height: 40px;
 }

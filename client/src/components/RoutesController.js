@@ -4,6 +4,7 @@ import TestBankPage from './TestBankPage';
 import SoloProblemPage from './SoloProblemPage';
 import HomePage from './HomePage';
 import ProfilePage from './ProfilePage';
+import CommunityPage from './CommunityPage';
 
 class RoutesController extends React.Component {
     render() {
@@ -14,6 +15,7 @@ class RoutesController extends React.Component {
                 <Route path="/soloproblempage/:questionId" element={<SoloProblemPage/>}/>
                 <Route path="/testbankpage" element={<TestBankPage/>} />
                 <Route path="/profilepage" element={<ProfilePage/>} />
+                <Route path="/communitypage" element={<CommunityPage/>} />
             </Routes>
         </BrowserRouter>
       );
