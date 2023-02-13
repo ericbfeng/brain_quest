@@ -3,11 +3,15 @@ const session = require("express-session");
 const app = express();
 const mongoose = require("mongoose");
 
-// Import schemas for DB.
+const server = app.listen(5000, () => {console.log(("Server started on port 5000"))});
+
+// ----------------------------------------------------------------------
+// Logic for database connection and schema loading.
+// ----------------------------------------------------------------------
+
 require("./database_schemas/userDetails");
 const User = mongoose.model("UserInfo");
 
-// Connect to mongoDB
 const uri = "mongodb+srv://team21CS194:team21CS194Password@cs194cluster.iq8hp8i.mongodb.net/?retryWrites=true&w=majority"
 
 async function connect() {
@@ -22,7 +26,10 @@ async function connect() {
 
 connect();
 
+// ----------------------------------------------------------------------
 // Middleware functions called before any API (such as /login)
+// ----------------------------------------------------------------------
+
 app.use(express.json());
 
 app.use(function(req, res, next){
@@ -40,6 +47,10 @@ app.use(function(req, res, next){
         maxAge: 1000 * 60 * 60 * 1, // 1 HOUR
     }
  }));
+
+ // ----------------------------------------------------------------------
+ // APIs that are used by the application.
+ // ----------------------------------------------------------------------
 
 app.post("/register", (req, res) => {
     const {userName, password} = req.body;
@@ -188,4 +199,18 @@ app.get("/logout", (req, res) => {
     })
 })
 
-app.listen(5000, () => {console.log(("Server started on port 5000"))});
+// ----------------------------------------------------------------------
+// Socket.io logic (enables bicommunication between clients / server)
+// ----------------------------------------------------------------------
+
+const io = require("socket.io")(server, {
+    cors: {
+        origin: "*",
+    },
+});
+
+io.on('connection', socket => {
+  socket.on('send_message', ({name, message}) => {
+    io.emit('message_recieved', {name, message});
+  })
+})
