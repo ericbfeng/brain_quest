@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {Link} from "react-router-dom";
+import SearchBar from "./SearchBar";
 
-export default function HomePage() {  
+export default function CommunityPage() {  
+
+  const [userData, setUserData] = useState([]);
+
+  useEffect(() => {
+    fetch('/UserInfo')
+      .then(res=> res.json())
+      .then(data => setUserData(data))
+      .then(error => console.error(error));
+  }, []);
+
     return (
       <div>
         <Link to="/">Go Back To HomePage</Link>
@@ -18,6 +29,8 @@ export default function HomePage() {
         foster the "social" aspect of the WebApp. Will rely on bidirectional communication
         between clients and servers (Socket.io seems promising).
         <br></br>
+
+        <SearchBar data={userData}/>
       </div>
     );
   }

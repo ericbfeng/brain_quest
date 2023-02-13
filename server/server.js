@@ -40,6 +40,19 @@ app.use(function(req, res, next){
         maxAge: 1000 * 60 * 60 * 1, // 1 HOUR
     }
  }));
+ 
+
+ app.get("/UserInfo", async (req, res) => {
+    try {
+        const userData = await User.find();
+        res.json(userData);
+    } catch (error) {
+        res.statusMessage = "Failed to get Database information";
+        res.status(500).end();
+    }
+});
+
+
 
 app.post("/register", (req, res) => {
     const {userName, password} = req.body;
