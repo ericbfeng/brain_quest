@@ -13,7 +13,7 @@ class RoutesController extends React.Component {
             <Routes>    
                 <Route path="/" element={<HomePage />} />
                 <Route path="/soloproblempage/:questionId" element={<SoloProblemPage/>}/>
-                <Route path="/testbankpage" element={<TestBankPage/>} />
+                <Route path="/testbankpage/:initialQuestionType?/:initialQuestionSubtype?" element={<TestBankPage/>} />
                 <Route path="/profilepage" element={<ProfilePage/>} />
                 <Route path="/communitypage" element={<CommunityPage/>} />
             </Routes>

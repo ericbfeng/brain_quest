@@ -3,7 +3,7 @@ import {Link, useParams} from "react-router-dom";
 import { allQuestions } from '../question_bank/questions';
 import { connect } from "react-redux";
 import { updateUser } from "../actions/sessionActions";
-import { BsPatchQuestionFill, BsArrowLeftShort } from 'react-icons/bs';
+import { BsArrowLeftShort } from 'react-icons/bs';
 import '../styles/SoloProblemPage.css';
 
 class AnswerChoices extends React.Component {
@@ -93,7 +93,7 @@ function SoloProblemPage({updateUser}) {
     return (
       <div className="solo-problem-page-container">
         <div className="solo-problem-page-subheader-container">
-          <Link className="arrow-icon-container" to="/testbankpage">
+          <Link className="arrow-icon-container" to={"/testbankpage/" + question.type + "/" + question.subType}>
             <BsArrowLeftShort className="arrow-icon" />
           </Link>
           <div>

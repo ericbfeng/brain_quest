@@ -1,7 +1,7 @@
 import React from 'react';
 import { allQuestions } from '../question_bank/questions';
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { BsPatchQuestionFill, BsArrowLeftShort } from 'react-icons/bs';
 import '../styles/TestBankPage.css';
 
@@ -55,11 +55,12 @@ function Questions({questionType, questionSubtype}){
     )
 }
 
-function SubheaderButton({questionType, updateParentState}) {
+function SubheaderButton({questionType}) {
     const [open, setOpen] = React.useState(false);
+    const navigate = useNavigate();
 
     const handleSubtypeClick = (questionSubtypeClicked) => {
-        updateParentState(questionType, questionSubtypeClicked)
+        navigate("/testbankpage/" + questionType + "/" + questionSubtypeClicked);
         setOpen(false);
     }
 
@@ -96,47 +97,33 @@ function SubheaderButton({questionType, updateParentState}) {
     );
   };
 
-class TestBankPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            questionType: null,
-            questionSubtype: null,
-        };
-    }
+export default function TestBankPage() {
+    let { initialQuestionType, initialQuestionSubtype } = useParams();
 
-    setParentState = (type, subtype) => {
-        this.setState({
-            questionType: type,
-            questionSubtype: subtype,
-        });
-    }
-
-    render() {
-        return (
-            <div className="test-bank-container">
-                <div className="test-bank-subheader">
-                    <Link className="arrow-icon-container" to="/">
-                        <BsArrowLeftShort className="arrow-icon" />
-                    </Link>
-                    <SubheaderButton questionType="SAT" updateParentState={this.setParentState}/>
-                    <SubheaderButton questionType="ACT" updateParentState={this.setParentState}/>
-                    <SubheaderButton questionType="AP" updateParentState={this.setParentState}/>
-                    <SubheaderButton questionType="CODING" updateParentState={this.setParentState}/>
-                </div>
-                {this.state.questionType && this.state.questionSubtype ?
-                    <Questions questionType={this.state.questionType} questionSubtype={this.state.questionSubtype} />:
-                    <div className="test-bank-prompt">
-                        <div className="test-bank-prompt-header">
-                            Welcome To The Test Bank!
-                        </div>
-                        <div className="test-bank-prompt-text">
-                            Your brain's quest for knowledge begins today.
-                        </div>
-                    </div>}
+    const questionType = initialQuestionType;
+    const questionSubtype = initialQuestionSubtype;
+    
+    return (
+        <div className="test-bank-container">
+            <div className="test-bank-subheader">
+                <Link className="arrow-icon-container" to="/">
+                    <BsArrowLeftShort className="arrow-icon" />
+                </Link>
+                <SubheaderButton questionType="SAT"/>
+                <SubheaderButton questionType="ACT"/>
+                <SubheaderButton questionType="AP"/>
+                <SubheaderButton questionType="CODING"/>
             </div>
-        );
-    }
+            {questionType && questionSubtype ?
+                <Questions questionType={questionType} questionSubtype={questionSubtype} />:
+                <div className="test-bank-prompt">
+                    <div className="test-bank-prompt-header">
+                        Welcome To The Test Bank!
+                    </div>
+                    <div className="test-bank-prompt-text">
+                        Your brain's quest for knowledge begins today.
+                    </div>
+                </div>}
+        </div>
+    );
   }
-
-  export default TestBankPage;
