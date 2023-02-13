@@ -26,3 +26,5 @@ npm start
 ```
 
 You're all set! You should note that any changes to the API or frontend should be immediate!
+
+William Xi
