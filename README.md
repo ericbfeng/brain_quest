@@ -1,5 +1,7 @@
 # Team 21
-This is a project for CS194 at Stanford. Read about it on our [Wiki](https://github.com/StanfordCS194/win2023-team21/wiki).
+This is a project for CS194 at Stanford. Read about it on our [Wiki](https://github.com/StanfordCS194/win2023-team21/wiki). The following people are in our team:
+
+    Israel Agundis
 
 ## Required Installations
 
