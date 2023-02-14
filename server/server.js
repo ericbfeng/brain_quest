@@ -209,8 +209,52 @@ const io = require("socket.io")(server, {
     },
 });
 
+const teamToSocketId = {};
+
 io.on('connection', socket => {
+  const connectionSocketId = socket.id;
+  console.log("SOCKET JOINED: " + connectionSocketId);
+
   socket.on('send_message', ({name, message}) => {
     io.emit('message_recieved', {name, message});
-  })
+  });
+
+  socket.on('create_team', ({username}) => {
+    // Note that the username is both the room name
+    // and the person who created the room.
+    socket.join(username);
+    teamToSocketId[username] = connectionSocketId;
+    io.emit('user_created_a_team', {username});
+  });
+
+  socket.on('user_wants_to_join_team', ({team, username}) => {
+    if(!io.sockets.adapter.rooms.get(team)){
+        io.emit('user_failed_to_join_team', {team, username});
+        return;
+    }
+    socket.join(team);
+    io.to(team).emit("user_joined_team", {team, teamLeaderSocketId: teamToSocketId[team], username, socketId: socket.id});
+  });
+
+  socket.on('indicate_user_left_page', () => {
+    io.emit('user_left_team_page', {socketId: connectionSocketId});
+  });
+
+  socket.on('signal_quiz_start_to_team', ({team}) => {
+    io.to(team).emit("leader_started_quiz");
+  });
+
+  socket.on('signal_answer_attempt_to_team', ({team, correct, username}) => {
+    io.to(team).emit("answer_was_attempted", {correct, username});
+  });
+
+  socket.on('signal_scores_to_team', ({team, teamMembers, answerAttempts}) => {
+    io.to(team).emit("scores_page_ready", {teamMembers, answerAttempts});
+  });
+
+  socket.on('disconnect', function(socket){
+    console.log("SOCKET LEFT: " + connectionSocketId);
+    io.emit('user_left_team_page', {socketId: connectionSocketId});
+  });
 })
+

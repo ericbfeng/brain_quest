@@ -5,6 +5,10 @@ import SoloProblemPage from './SoloProblemPage';
 import HomePage from './HomePage';
 import ProfilePage from './ProfilePage';
 import CommunityPage from './CommunityPage';
+import TeamPage from './TeamPage';
+
+import { io } from 'socket.io-client';
+const socket = io('http://localhost:5000');
 
 class RoutesController extends React.Component {
     render() {
@@ -15,7 +19,8 @@ class RoutesController extends React.Component {
                 <Route path="/soloproblempage/:questionId" element={<SoloProblemPage/>}/>
                 <Route path="/testbankpage/:initialQuestionType?/:initialQuestionSubtype?" element={<TestBankPage/>} />
                 <Route path="/profilepage" element={<ProfilePage/>} />
-                <Route path="/communitypage" element={<CommunityPage/>} />
+                <Route path="/communitypage" element={<CommunityPage socket={socket}/>} />
+                <Route path="/teampage" element={<TeamPage socket={socket}/>} />
             </Routes>
         </BrowserRouter>
       );

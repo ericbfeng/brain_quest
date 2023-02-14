@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 import {Link} from "react-router-dom";
 import { useSelector } from "react-redux";
 import '../styles/CommunityPage.css';
-import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:5000');
-
-function GlobalChat() {
+function GlobalChat({socket}) {
   const [globalChat, setGlobalChat] = useState([]);
   const [messageEntered, setMessageEntered] = useState('');
   const userInformation = useSelector((state) => state.session.userInformation);
@@ -48,7 +45,7 @@ function GlobalChat() {
   )
 }
 
-export default function HomePage() {  
+export default function HomePage({socket}) {  
     return (
       <div className="community-page-body-container">
         <Link to="/">Go Back To HomePage</Link>
@@ -62,7 +59,7 @@ export default function HomePage() {
             they can ultimately search up a user, click on the user, be taken
             to that user's profile and send a friend request.
           </div>
-          <GlobalChat />
+          <GlobalChat socket={socket}/>
         </div>
       </div>
     );
