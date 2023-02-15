@@ -7,10 +7,12 @@ export default function CommunityPage() {
   const [userData, setUserData] = useState([]);
 
   useEffect(() => {
-    fetch('/UserInfo')
+    if(userData.length === 0) {
+      fetch('/UserInfo')
       .then(res=> res.json())
       .then(data => setUserData(data))
       .then(error => console.error(error));
+    }
   }, []);
 
     return (
