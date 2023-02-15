@@ -14,13 +14,15 @@ function LoginOrRegister({loginUser}) {
   const [registerUsername, setRegisterUsername] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
+  const [registerOccupation, setRegisterOccupation] = useState("");
 
   // Keeps track of what view (Login vs Register) the user is on.
   const [userIsLoggingIn, setUserIsLoggingIn] = useState(true);
 
   const handleRegisterRequest = () => {
     // They needed to provide values to all required fields.
-    if(!registerUsername || !registerPassword || !registerConfirmPassword){
+    if(!registerUsername || !registerPassword || !registerConfirmPassword 
+      || !registerOccupation || registerOccupation === "none"){
       alert("Please fill all fields");
       return;
     }
@@ -95,6 +97,7 @@ function LoginOrRegister({loginUser}) {
         setRegisterUsername("");
         setRegisterPassword("");
         setRegisterConfirmPassword("");
+        setRegisterOccupation("");
         setUserIsLoggingIn(true);
       } else {
         // The user was on the login page and then clicked login. We need to 
@@ -102,6 +105,20 @@ function LoginOrRegister({loginUser}) {
         handleLoginRequest();
       }
     }
+  }
+
+  // Selection options for the occupation field on the registration page
+  const options = [
+    {value: '', text: '--Choose an option--'},
+    {value: 'teacher', text: 'Teacher'},
+    {value: 'student', text: 'Student'},
+    {value: 'professional', text: 'Professional'},
+    {value: 'other', text: 'Other'},
+  ];
+  const [selected, setSelected] = useState(options[0].value);
+  function twoCalls(e) {
+    setSelected(e.target.value)
+    setRegisterOccupation(e.target.value)
   }
 
   return (
@@ -116,6 +133,13 @@ function LoginOrRegister({loginUser}) {
             <input placeholder="Username" className="user-input" value={registerUsername} onChange = {(e) => setRegisterUsername(e.target.value)}/>
             <input placeholder="Password" className="user-input" value={registerPassword} type="password" onChange = {(e) => setRegisterPassword(e.target.value)}/>
             <input placeholder="Confirm Password" className="user-input" value={registerConfirmPassword} type="password" onChange = {(e) => setRegisterConfirmPassword(e.target.value)}/>
+            <select value={selected} onChange={(e) => twoCalls(e)}>
+              {options.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.text}
+                </option>
+              ))}
+            </select>
           </div>
         }
       </div>

@@ -42,7 +42,7 @@ app.use(function(req, res, next){
  }));
 
 app.post("/register", (req, res) => {
-    const {userName, password} = req.body;
+    const {userName, password, occupation} = req.body;
 
     User.find({
         username: userName
@@ -58,6 +58,7 @@ app.post("/register", (req, res) => {
             User.create({
                 username: userName,
                 password: password,
+                occupation: occupation,
                 record: [],
             }, (err, result) => {
                 if(err) {
@@ -80,6 +81,7 @@ app.post("/login", (req, res) => {
     User.find({
         username: username,
         password: password,
+        occupation: occupation,
     }, (err, result) => {
         if(err){
             res.statusMessage = "Login failed. Server error.";
