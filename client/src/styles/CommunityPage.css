@@ -29,3 +29,17 @@
     overflow-y:auto;
     border: 3px solid black;
 }
+
+.community-page-component-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.community-page-search-bar {
+    width: 50%;
+}
+
+.community-page-global-chat {
+    width: 50%;
+}

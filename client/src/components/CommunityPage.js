@@ -63,22 +63,19 @@ export default function CommunityPage({socket}) {
   return (
     <div className="community-page-body-container">
       <Link to="/">Go Back To HomePage</Link>
-      <br></br>
-      This is the Community Page.
-      <br></br>
-      We probably want the community page to have 2 main features:
-      <br></br>
-      1. A user should be able to search up other users. Idea being that
-      they can ultimately search up a user, click on the user, be taken
-      to that user's profile and send a friend request.
-      <br></br> 
-      2. A global chat should be present here. The idea being that this will
-      foster the "social" aspect of the WebApp. Will rely on bidirectional communication
-      between clients and servers (Socket.io seems promising).
-      <br></br>
-
-      <SearchBar data={userData} filterBy="username"/>
-       <GlobalChat socket={socket}/>
+      <div>
+        This is the Community Page.
+        <br></br>
+        TODO: Change this text to tell people what the 2 components below do.
+      </div>
+      <div className="community-page-component-container">
+        <div className="community-page-search-bar">
+          <SearchBar data={userData} filterBy="username"/>
+        </div>
+        <div className="community-page-global-chat">
+          <GlobalChat socket={socket}/>
+        </div>
+      </div>
     </div>
     );
  }
