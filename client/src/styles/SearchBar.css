@@ -1,0 +1,33 @@
+.search-bar{
+    width: 25%;
+    background-color: #FFDCC6;
+    padding-left: 10px;
+    margin: 8px 8px;
+  }
+
+.search-bar-button {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #008CBA;
+    border-radius: 15px;
+    margin: 8px 8px;
+}
+  
+.search-bar-button:hover {
+    background-color: #008CBA;
+    color: white;
+}
+
+.search-result{
+    width: 25%;
+    border: 2px solid #008CBA;
+    padding-left: 10px;
+    margin: 8px 8px;
+    border-radius: 15px;
+}
+
+.search-result:hover{
+    background-color: #a2d6e7;
+}
+
+

@@ -30,7 +30,7 @@ export default function CommunityPage() {
         between clients and servers (Socket.io seems promising).
         <br></br>
 
-        <SearchBar data={userData}/>
+        <SearchBar data={userData} filterBy="username"/>
       </div>
     );
   }
