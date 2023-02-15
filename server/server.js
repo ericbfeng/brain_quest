@@ -252,6 +252,10 @@ io.on('connection', socket => {
     io.to(team).emit("scores_page_ready", {teamMembers, answerAttempts});
   });
 
+  socket.on('team_send_message', ({name, message, team}) => {
+    io.to(team).emit("team_message_recieved", {name, message});
+  });
+
   socket.on('disconnect', function(socket){
     console.log("SOCKET LEFT: " + connectionSocketId);
     io.emit('user_left_team_page', {socketId: connectionSocketId});

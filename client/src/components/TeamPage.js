@@ -2,7 +2,50 @@ import React, { useState, useEffect } from "react";
 import {Link} from "react-router-dom";
 import { useSelector } from "react-redux";
 import { allQuestions } from '../question_bank/questions';
+import NumericInput from 'react-numeric-input';
 import '../styles/TeamPage.css';
+
+function TeamChat({socket, team}) {
+  const [teamChat, setTeamChat] = useState([]);
+  const [messageEntered, setMessageEntered] = useState('');
+  const userInformation = useSelector((state) => state.session.userInformation);
+
+  useEffect(() => {
+    socket.on('team_message_recieved', ({name, message}) => {
+      setTeamChat([...teamChat, {name, message}])
+    })
+  })
+
+  const renderTeamChat = () => {
+    return teamChat.map(({name, message}, index) => (
+      <div key={index}>
+        {name}: {message}
+      </div>
+    ))
+  }
+
+  const handleSubmit = () => {
+    socket.emit('team_send_message', {name: userInformation.username, message: messageEntered, team});
+    setMessageEntered("");  
+  }
+  
+  return (
+    <div>
+      <div>
+        <input 
+          value={messageEntered} 
+          type="text" 
+          placeholder="Enter chat" 
+          onChange={(e) => setMessageEntered(e.target.value)}
+        />
+        <button onClick={handleSubmit}>Send</button>
+      </div>
+      <div className="team-chat-display-container">
+        {renderTeamChat()}
+      </div>
+    </div>
+  )
+}
 
 class AnswerChoices extends React.Component {
   constructor(props) {
@@ -213,7 +256,8 @@ export default function TestPage({socket}) {
           You are responsible for starting the quiz and selecting the number of questions:
           <br></br>
           <br></br>
-          TODO: Let them control how many questions via input field. Currently it defaults to 2.
+          <NumericInput min={1} max={allQuestions.length} value={numQuizQuestions} onChange={(newValue) => updateNumQuizQuestions(newValue)}/>
+          <br></br>
           <button onClick={() => socket.emit("signal_quiz_start_to_team", {team})}>Start Quiz</button>
         </div>
       }
@@ -270,7 +314,10 @@ export default function TestPage({socket}) {
     }
 
     return (
-      <div>
+      <div className="quiz-view-master-container">
+        <div>
+          {"Question #" + (currentQuestionIndex + 1)}
+        </div>
         {questionsToAsk[currentQuestionIndex].question}
         <AnswerChoices choices={questionsToAsk[currentQuestionIndex].choices} onSubmit={onAnswerSubmission} />
       </div>
@@ -299,6 +346,8 @@ export default function TestPage({socket}) {
       {renderUserRecords()}
       <br></br>
       TODO: We might want to update a user's profile to reflect how many quizzes they have won.
+      Also, we might want to say who "WON" the competition by having a point system.
+      Something like, every correct answer gives a user one point, every incorrect answer gives the user -0.5 points.
     </div>
   }
 
@@ -307,10 +356,17 @@ export default function TestPage({socket}) {
       <Link onClick={() => socket.emit("indicate_user_left_page")} to="/">Go Back To HomePage</Link>
       <br></br>
       <div className="team-page-body-container">
-        {pageToShow === "JOIN/CREATE" && GetJoinCreateView()}
-        {pageToShow === "WAITING" && GetWaitingView()}
-        {pageToShow === "QUIZ" && GetQuizView()}
-        {pageToShow === "SCORES" && GetScoresView()}
+        <div>
+          {pageToShow === "JOIN/CREATE" && GetJoinCreateView()}
+          {pageToShow === "WAITING" && GetWaitingView()}
+          {pageToShow === "QUIZ" && GetQuizView()}
+          {pageToShow === "SCORES" && GetScoresView()}
+        </div>
+        <div>
+          {pageToShow !== "JOIN/CREATE" &&
+            <TeamChat socket={socket} team={team}></TeamChat>
+          }
+        </div>
       </div>
     </div>
   );
