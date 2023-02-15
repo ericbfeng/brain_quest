@@ -11,7 +11,7 @@ export default function SearchBar({data, filterBy}) {
 
     function getResults() {
         //console.log(data);
-        if (searchQuery.length != 0) {
+        if (searchQuery.length !== 0) {
             const filter = data.filter((value) => {
                 return value[filterBy].toLowerCase().includes(searchQuery.toLowerCase());
             })
@@ -26,7 +26,7 @@ export default function SearchBar({data, filterBy}) {
                 <input type="SearchBar" className="search-bar" placeholder="Find a user..." onChange={handleFilter}></input>
                 <button className="search-bar-button" onClick={getResults} >Search</button>
             </div>
-            {filteredData.length!=0 && 
+            {filteredData.length !== 0 && 
             (
             <div>
                 {filteredData.map((value) => {
