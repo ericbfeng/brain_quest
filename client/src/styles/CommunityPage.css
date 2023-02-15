@@ -1,0 +1,31 @@
+
+.community-page-body-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.community-page-body-content-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    padding: 20px;
+}
+
+.global-chat-master-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.global-chat-input-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.global-chat-display-container {
+    height: 400px;
+    overflow-y:auto;
+    border: 3px solid black;
+}

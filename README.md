@@ -2,6 +2,7 @@
 This is a project for CS194 at Stanford. Read about it on our [Wiki](https://github.com/StanfordCS194/win2023-team21/wiki). The following people are in our team:
 
     Israel Agundis
+    William Xi
 
 ## Required Installations
 
@@ -25,6 +26,10 @@ npm install
 npm start
 ```
 
-You're all set! You should note that any changes to the API or frontend should be immediate!
+You're all set! You should note that any changes to the API or frontend should be immediate!\
 
-William Xi
+
+
+Eric-githubassignment 
+
+

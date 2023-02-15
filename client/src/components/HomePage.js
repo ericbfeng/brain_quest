@@ -15,6 +15,8 @@ export default function HomePage() {
         <Link to="/profilepage">ProfilePage</Link>
         <br></br>
         <Link to="/communitypage">CommunityPage</Link>
+        <br></br>
+        <Link to="/teampage">TeamPage</Link>
       </div>
     );
   }

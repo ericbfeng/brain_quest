@@ -1,0 +1,22 @@
+.team-page-create-join-container {
+    display: flex;
+    gap: 100px;
+}
+
+.team-page-body-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.quiz-view-master-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.team-chat-display-container {
+    height: 400px;
+    overflow-y:auto;
+    border: 3px solid black;
+}

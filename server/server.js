@@ -3,11 +3,15 @@ const session = require("express-session");
 const app = express();
 const mongoose = require("mongoose");
 
-// Import schemas for DB.
+const server = app.listen(5000, () => {console.log(("Server started on port 5000"))});
+
+// ----------------------------------------------------------------------
+// Logic for database connection and schema loading.
+// ----------------------------------------------------------------------
+
 require("./database_schemas/userDetails");
 const User = mongoose.model("UserInfo");
 
-// Connect to mongoDB
 const uri = "mongodb+srv://team21CS194:team21CS194Password@cs194cluster.iq8hp8i.mongodb.net/?retryWrites=true&w=majority"
 
 async function connect() {
@@ -22,7 +26,10 @@ async function connect() {
 
 connect();
 
+// ----------------------------------------------------------------------
 // Middleware functions called before any API (such as /login)
+// ----------------------------------------------------------------------
+
 app.use(express.json());
 
 app.use(function(req, res, next){
@@ -53,6 +60,10 @@ app.use(function(req, res, next){
 });
 
 
+
+ // ----------------------------------------------------------------------
+ // APIs that are used by the application.
+ // ----------------------------------------------------------------------
 
 app.post("/register", (req, res) => {
     const {userName, password} = req.body;
@@ -201,4 +212,66 @@ app.get("/logout", (req, res) => {
     })
 })
 
-app.listen(5000, () => {console.log(("Server started on port 5000"))});
+// ----------------------------------------------------------------------
+// Socket.io logic (enables bicommunication between clients / server)
+// ----------------------------------------------------------------------
+
+const io = require("socket.io")(server, {
+    cors: {
+        origin: "*",
+    },
+});
+
+const teamToSocketId = {};
+
+io.on('connection', socket => {
+  const connectionSocketId = socket.id;
+  console.log("SOCKET JOINED: " + connectionSocketId);
+
+  socket.on('send_message', ({name, message}) => {
+    io.emit('message_recieved', {name, message});
+  });
+
+  socket.on('create_team', ({username}) => {
+    // Note that the username is both the room name
+    // and the person who created the room.
+    socket.join(username);
+    teamToSocketId[username] = connectionSocketId;
+    io.emit('user_created_a_team', {username});
+  });
+
+  socket.on('user_wants_to_join_team', ({team, username}) => {
+    if(!io.sockets.adapter.rooms.get(team)){
+        io.emit('user_failed_to_join_team', {team, username});
+        return;
+    }
+    socket.join(team);
+    io.to(team).emit("user_joined_team", {team, teamLeaderSocketId: teamToSocketId[team], username, socketId: socket.id});
+  });
+
+  socket.on('indicate_user_left_page', () => {
+    io.emit('user_left_team_page', {socketId: connectionSocketId});
+  });
+
+  socket.on('signal_quiz_start_to_team', ({team}) => {
+    io.to(team).emit("leader_started_quiz");
+  });
+
+  socket.on('signal_answer_attempt_to_team', ({team, correct, username}) => {
+    io.to(team).emit("answer_was_attempted", {correct, username});
+  });
+
+  socket.on('signal_scores_to_team', ({team, teamMembers, answerAttempts}) => {
+    io.to(team).emit("scores_page_ready", {teamMembers, answerAttempts});
+  });
+
+  socket.on('team_send_message', ({name, message, team}) => {
+    io.to(team).emit("team_message_recieved", {name, message});
+  });
+
+  socket.on('disconnect', function(socket){
+    console.log("SOCKET LEFT: " + connectionSocketId);
+    io.emit('user_left_team_page', {socketId: connectionSocketId});
+  });
+})
+
