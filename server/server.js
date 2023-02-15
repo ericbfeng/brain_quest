@@ -80,8 +80,7 @@ app.post("/login", (req, res) => {
 
     User.find({
         username: username,
-        password: password,
-        occupation: occupation,
+        password: password
     }, (err, result) => {
         if(err){
             res.statusMessage = "Login failed. Server error.";
@@ -99,6 +98,7 @@ app.post("/login", (req, res) => {
                 userInformation: {
                     username: req.body.username,
                     password: req.body.password,
+                    occupation: result[0].occupation,
                     record: result[0].record,
                 }
              })

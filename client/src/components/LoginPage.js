@@ -38,7 +38,8 @@ function LoginOrRegister({loginUser}) {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         userName: registerUsername,
-        password: registerPassword
+        password: registerPassword,
+        occupation: registerOccupation
       })
     })
     .then((res) => {
