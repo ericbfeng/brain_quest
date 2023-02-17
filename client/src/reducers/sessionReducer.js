@@ -6,6 +6,7 @@
     userInformation: {
         username: string
         password: string
+        occupation: string
         questionsSolved: []
     }
     */

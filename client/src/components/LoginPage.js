@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { connect } from "react-redux";
 import { loginUser } from "../actions/sessionActions";
 import logo from '../logo.png';
-import '../styles/LoginPage.css'
+import '../styles/LoginPage.css';
 
 function LoginOrRegister({loginUser}) {
 
