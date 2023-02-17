@@ -1,0 +1,70 @@
+.profile-questions-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.profile-question-text {
+    margin-top: 2%;
+    margin-right: 5%;
+    margin-bottom: 1%;
+    font-size: 40px; 
+}
+
+.profile-header{
+    display: flex;
+    flex-direction: column;
+    background-color: #FFB786;
+    width: 100%;
+    flex-wrap: column;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 200px;
+    height: 100%;
+    margin-left: 4%;
+}
+
+.profile-picture {
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    margin-top: 2%;
+    margin-left: 5%;
+    margin-bottom: 1%;
+}
+
+.profile-feild-container {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    margin: 1%;
+}
+
+.field-spacer {
+    padding: 5%;
+    padding-top: 0;
+}
+
+.edit-button {
+    margin-left: 16px;
+    margin-right: 16px;
+    margin-top: 4px;
+    width: 45px;
+    height: 85%;
+}
+
+.profile-text {
+    text-align: left;
+    font-size: 20px; 
+    margin: 1px;
+}
+
+.profile-input {
+    width: 60px;
+    margin: 0px;
+}
+
