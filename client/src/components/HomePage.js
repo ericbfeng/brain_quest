@@ -1,22 +1,44 @@
-import React from "react";
-import {Link} from "react-router-dom";
 
-export default function HomePage() {  
-    return (
-      <div>
-        This is the HomePage.
-        <br></br>
-        There will be a navigation bar on the top to different pages.
-        <br></br>
-        In the meantime here is links to existing pages:
-        <br></br> 
-        <Link to="/testbankpage">TestBankPage</Link>
-        <br></br>
-        <Link to="/profilepage">ProfilePage</Link>
-        <br></br>
-        <Link to="/communitypage">CommunityPage</Link>
-        <br></br>
-        <Link to="/teampage">TeamPage</Link>
-      </div>
-    );
-  }
+import {Link} from "react-router-dom";
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Unstable_Grid2';
+import UserDash from "./UserDash";
+import Stack from '@mui/material/Stack';
+import FriendsTab from "./FriendsTab";
+import PastTest from "./PastTests";
+import { tabClasses } from "@mui/material";
+
+
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
+
+export default function HomePage() {
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <Stack spacing={2}>
+        <Grid container spacing={2}>
+          <Grid xs={8} sx={{ height: "100%" }}>
+            <UserDash />
+          </Grid>
+          <Grid xs={4} sx={{ height: "100%" }}>
+            <FriendsTab tablabel={"Friends"} />
+          </Grid>
+          <Grid xs={8} sx={{ height: "100%" }}>
+            <PastTest />
+          </Grid>
+          <Grid xs={4} sx={{ height: "100%" }}>
+            <FriendsTab tablabel={"Add New Friends"} />
+          </Grid>
+        </Grid>
+      </Stack>
+    </Box>);
+}
