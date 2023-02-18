@@ -1,12 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import { connect } from "react-redux";
 import { updateUser } from "../actions/sessionActions";
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 
 function ProfilePage({userInfo, updateUser}) {  
+  let {username} = useParams();
+  if (!username) username = userInfo.username;
+
+  const [userData, setUserData] = useState();
+
+  console.log(username);
+
+  useEffect(() => {
+    console.log(username);
+    fetch(`/getUser`, {
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        userName: username
+      })
+    })
+    .then((res) => {
+      if(!res.ok) throw new Error(res.statusText);
+      else return res.json();
+    })
+    .then(data => setUserData(data))
+    .then(console.log("hi"))
+  }, []);
+
+
     return (
       <div>
         <Link to="/">Go Back To HomePage</Link>
+        <br></br>
+        This is the profile page of {username}
         <br></br>
         This is a rudimentary profile page. To enable account editing / viewing stats.
         <br></br>
@@ -21,9 +48,10 @@ function ProfilePage({userInfo, updateUser}) {
 
         <br></br>
         <br></br>
-        {JSON.stringify(userInfo)}
+        {JSON.stringify(userData)}
 
         <br></br>
+        THE PASSWORD IS RIGHT HERE ^^^ HACK INTO THEIR ACCOUNT NOW!!
         <br></br>
         Note that 'record' above indicates the array of questionIds that the user
         has solved correctly. Note that there can be repeats, so extract all the data

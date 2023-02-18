@@ -59,6 +59,20 @@ app.use(function(req, res, next){
     }
 });
 
+app.post("/getUser/", async (req, res) => {
+    const {userName} = req.body;
+    console.log("USERNAME IS ", userName);
+    try {
+        const userData = await User.find({username: userName});
+        res.json(userData);
+    } catch (error) {
+        res.statusMessage = "Failed to get Database information";
+        res.status(500).end();
+    }
+});
+
+
+
 
 
  // ----------------------------------------------------------------------

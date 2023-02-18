@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import '../styles/SearchBar.css';
+import {Link} from "react-router-dom";
 
 export default function SearchBar({data, filterBy}) {
     const [filteredData, setFilteredData] = useState([]);
@@ -30,7 +31,11 @@ export default function SearchBar({data, filterBy}) {
             (
             <div>
                 {filteredData.map((value) => {
-                    return <div key={value._id} className="search-result"> {value[filterBy]} </div> // TODO: change into <a> tag so that you can link profiles
+                    if(filterBy == "username") {
+                        return <div key={value._id} className="search-result"> <Link to={"/profilepage/" + value.username}>{value[filterBy]}</Link> </div> 
+                    } else {
+                        return <div key={value._id} className="search-result"> {value[filterBy]} </div> 
+                    }
                 })}
             </div>
             )

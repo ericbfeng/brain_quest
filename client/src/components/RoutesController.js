@@ -18,7 +18,7 @@ class RoutesController extends React.Component {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/soloproblempage/:questionId" element={<SoloProblemPage/>}/>
                 <Route path="/testbankpage/:initialQuestionType?/:initialQuestionSubtype?" element={<TestBankPage/>} />
-                <Route path="/profilepage" element={<ProfilePage/>} />
+                <Route path="/profilepage/:username?" element={<ProfilePage/>} />
                 <Route path="/communitypage" element={<CommunityPage socket={socket}/>} />
                 <Route path="/teampage" element={<TeamPage socket={socket}/>} />
             </Routes>
