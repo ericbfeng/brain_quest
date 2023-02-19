@@ -3,6 +3,8 @@ This is a project for CS194 at Stanford. Read about it on our [Wiki](https://git
 
     Israel Agundis
     William Xi
+    Rain Juhl
+    Eric Feng
 
 ## Required Installations
 
@@ -27,9 +29,5 @@ npm start
 ```
 
 You're all set! You should note that any changes to the API or frontend should be immediate!\
-
-
-
-Eric-githubassignment 
 
 

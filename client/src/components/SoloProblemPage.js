@@ -77,6 +77,7 @@ function SoloProblemPage({updateUser}) {
           })
           .then(
             (result) => {
+              console.log(result);
               updateUser(result);
               alert("Correct!");
             },
