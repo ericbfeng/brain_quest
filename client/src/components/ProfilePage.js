@@ -46,8 +46,6 @@ function ProfilePage({userInfo, updateUser}) {
     }, []);
     */
 
-
-   setPassword(pageUserData[0].password);
   
 
     // boolean to denote if we are viewing our own profile or not
@@ -146,16 +144,13 @@ function ProfilePage({userInfo, updateUser}) {
             </div>
             <button className="edit-button" onClick={() => handleClick("username")}> {bEdit1} </button>
           </div>
-          { isCurrUser ? (
           <div className="profile-container">
             <div className="field-spacer"> 
               <div className="profile-text"> Password: </div>
               <FieldText type={bEdit2} field="password"/>
             </div>
             <button className="edit-button" onClick={() => handleClick("password")}> {bEdit2} </button> 
-          </div>) :
-          (null)
-          }
+          </div>
           <div className="profile-container">
             <div className="field-spacer"> 
               <div className="profile-text"> Occupation: </div>

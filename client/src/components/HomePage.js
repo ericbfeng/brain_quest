@@ -1,10 +1,12 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import { connect } from "react-redux";
+import { updateUser } from "../actions/sessionActions";
 
-export default function HomePage() {  
+function HomePage({userInfo, updateUser}) {  
     return (
       <div>
-        This is the HomePage.
+        This is the HomePage. Welcome {userInfo.username}!
         <br></br>
         There will be a navigation bar on the top to different pages.
         <br></br>
@@ -12,7 +14,7 @@ export default function HomePage() {
         <br></br> 
         <Link to="/testbankpage">TestBankPage</Link>
         <br></br>
-        <Link to="/profilepage">ProfilePage</Link>
+        <Link to={"/profilepage/" + userInfo.username}>ProfilePage</Link>
         <br></br>
         <Link to="/communitypage">CommunityPage</Link>
         <br></br>
@@ -20,3 +22,13 @@ export default function HomePage() {
       </div>
     );
   }
+
+  const mapStateToProps = state => ({
+    userInfo: state.session.userInformation,
+  });
+
+  const mapActionsToProps = () => ({
+    updateUser
+  });
+  
+  export default connect(mapStateToProps, mapActionsToProps())(HomePage)
