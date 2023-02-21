@@ -19,6 +19,8 @@ function HomePage({userInfo, updateUser}) {
         <Link to="/communitypage">CommunityPage</Link>
         <br></br>
         <Link to="/teampage">TeamPage</Link>
+        <br></br>
+        <Link to="/codeeditorpage">Code Editor</Link>
       </div>
     );
   }
