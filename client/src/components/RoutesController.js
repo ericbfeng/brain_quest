@@ -5,6 +5,7 @@ import SoloProblemPage from './SoloProblemPage';
 import HomePageIndex from './HomePageIndex';
 import HomePage from './HomePage';
 import ProfilePage from './ProfilePage';
+import CodeEditorPage from './CodeEditorPage'
 import CommunityPage from './CommunityPage';
 import TeamPage from './TeamPage';
 
@@ -22,6 +23,7 @@ class RoutesController extends React.Component {
                 <Route path="/profilepage/:pageUsername" element={<ProfilePage/>} />
                 <Route path="/communitypage" element={<CommunityPage socket={socket}/>} />
                 <Route path="/teampage" element={<TeamPage socket={socket}/>} />
+                <Route path="/codeeditorpage" element={<CodeEditorPage />} />
             </Routes>
         </BrowserRouter>
       );
