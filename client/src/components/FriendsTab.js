@@ -10,9 +10,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 
 import IconButton from '@mui/material/IconButton';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
-
+import ChatIcon from '@mui/icons-material/Chat';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 export default function FriendsTab({tablabel}){
 
@@ -37,8 +36,8 @@ export default function FriendsTab({tablabel}){
               {generate(
                 <ListItem
                   secondaryAction={
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
+                    <IconButton edge="end" aria-label="chat">
+                    { tablabel ===  "Friends" ? <ChatIcon />: <PersonAddIcon/>} 
                     </IconButton>
                   }
                 >
