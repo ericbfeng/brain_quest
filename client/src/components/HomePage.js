@@ -10,6 +10,8 @@ import Stack from '@mui/material/Stack';
 import FriendsTab from "./FriendsTab";
 import PastTest from "./PastTests";
 import { tabClasses } from "@mui/material";
+import {useNavigate } from 'react-router-dom';
+
 
 
 
@@ -20,8 +22,7 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
-import { connect } from "react-redux";
-import { updateUser } from "../actions/sessionActions";
+
 
 export default function HomePage() {
   return (
