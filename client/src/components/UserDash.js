@@ -10,7 +10,11 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-
+import CalculateIcon from '@mui/icons-material/Calculate';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import LinearProgress from '@mui/material/LinearProgress';
 
 function Selector(){
     const [test, setTest] = React.useState('select test');
@@ -36,6 +40,9 @@ function Selector(){
     );
 }
 
+
+
+
 function TestDisplay(){ 
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
@@ -51,13 +58,24 @@ function TestDisplay(){
         scrollButtons="auto"
         aria-label="scrollable auto tabs example"
       >
-        <Tab label="Math"/>
-        <Tab label="Reading" />
-        <Tab label="English" />
-        <Tab label="Science" />
-        <Tab label="ETC " />
-        <Tab label="ETC2" />
-        <Tab label="ETC3" />
+        <Tab label={<Stack spacing={2}>
+                <CalculateIcon/>
+                <LinearProgress  value = {10} variant="determinate" />
+                </Stack>} />
+        <Tab label={
+            <Stack spacing={2}>
+            <AutoStoriesIcon/> 
+            <LinearProgress value = {40} variant="determinate" />
+            </Stack>
+        }/>
+        <Tab label={<Stack spacing={2}>
+        <MenuBookIcon/> <LinearProgress  value = {70}  variant="determinate"  />
+        </Stack>} />
+        <Tab label={
+        <Stack spacing={2}>
+            <LightbulbIcon/> <LinearProgress  value = {10} variant="determinate" /> 
+        </Stack> } 
+        />
       </Tabs>
     </Box>);
 }
