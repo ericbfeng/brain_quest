@@ -2,13 +2,15 @@ import {React, useState}  from "react";
 import {Link} from "react-router-dom";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import HomePage from "./HomePage";
 
 export default function HomePageIndex() {  
 
   const [value, setValue] = useState(0);
+  const navigate = useNavigate();
+
 
   function a11yProps(index) {
     return {
@@ -19,6 +21,12 @@ export default function HomePageIndex() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    if(newValue === 1){
+      navigate('/teampage', { replace: true });
+    } 
+    if(newValue === 2){
+      navigate('/testbankpage', { replace: true });
+    }
   };
 
     return (
