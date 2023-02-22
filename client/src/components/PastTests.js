@@ -41,10 +41,10 @@ export default function PastTest(){
             Past Tests:
         </Typography>
         <Stack spacing={2}>
-        <IndividualTest/>
-        <IndividualTest/>
-        <IndividualTest/>
-        <IndividualTest/>
+            <IndividualTest/>
+            <IndividualTest/>
+            <IndividualTest/>
+            <IndividualTest/>
         </Stack>
         </CardContent>
         </Card>

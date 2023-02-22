@@ -49,13 +49,13 @@ function GlobalChat({socket}) {
 
 export default function CommunityPage({socket}) {  
 
-  const [userData, setUserData] = useState([]);
+  const [allUsersData, setAllUsersData] = useState([]);
 
   useEffect(() => {
-    if(userData.length === 0) {
+    if(allUsersData.length === 0) {
       fetch('/UserInfo')
       .then(res=> res.json())
-      .then(data => setUserData(data))
+      .then(data => setAllUsersData(data))
       .then(error => console.error(error));
     }
   }, []);
@@ -70,7 +70,7 @@ export default function CommunityPage({socket}) {
       </div>
       <div className="community-page-component-container">
         <div className="community-page-search-bar">
-          <SearchBar data={userData} filterBy="username"/>
+          <SearchBar data={allUsersData} filterBy="username"/>
         </div>
         <div className="community-page-global-chat">
           <GlobalChat socket={socket}/>

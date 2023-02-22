@@ -1,20 +1,59 @@
-import React, {useState}  from 'react';
+import React, { useEffect, useState } from "react";
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { connect } from "react-redux";
 import { updateUser } from "../actions/sessionActions";
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import '../styles/ProfilePage.css';
 import '../styles/TestBankPage.css';
 
 function ProfilePage({userInfo, updateUser}) {  
-    let [username, setUsername] = useState(userInfo.username);
-    let [password, setPassword] = useState(userInfo.password);
-    let [occupation, setOccupation] = useState(userInfo.occupation);
+
+    // get the username of the current profile page we are viewing
+    let { pageUsername } = useParams();
+  
+
+    let [username, setUsername] = useState(pageUsername);
+    let [password, setPassword] = useState();
+    let [occupation, setOccupation] = useState();
     let [bEdit1, setbEdit1] = useState("Edit");
     let [bEdit2, setbEdit2] = useState("Edit");
     let [bEdit3, setbEdit3] = useState("Edit");
     let record = userInfo.record;
 
+    // TODO: Grab current page username user's info from backend.
+    // for some reason, when I do it it is very inconsistent. The
+    // code below does not work when page is refreshed, for example
+    /*
+    const [pageUserData, setPageUserData] = useState();
+
+    // fetch the profile page user's data
+    useEffect(() => {
+      if(!pageUserData) {
+        fetch(`/getUser`, {
+          method: 'POST',
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            userName: pageUsername
+          })
+        })
+        .then((res) => {
+          if(!res.ok) throw new Error(res.statusText);
+          else return res.json();
+        })
+        .then(data => setPageUserData(data))
+      }
+      
+    }, []);
+    */
+
+  
+
+    // boolean to denote if we are viewing our own profile or not
+    let isCurrUser = (pageUsername == userInfo.username);    
+    console.log("Is curr user:", isCurrUser);
+   
+
+    
     if (!occupation) {occupation = "Unknown"};
 
     const handleClick = (origin) => {
@@ -110,7 +149,7 @@ function ProfilePage({userInfo, updateUser}) {
               <div className="profile-text"> Password: </div>
               <FieldText type={bEdit2} field="password"/>
             </div>
-            <button className="edit-button" onClick={() => handleClick("password")}> {bEdit2} </button>
+            <button className="edit-button" onClick={() => handleClick("password")}> {bEdit2} </button> 
           </div>
           <div className="profile-container">
             <div className="field-spacer"> 

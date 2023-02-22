@@ -20,6 +20,8 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
+import { connect } from "react-redux";
+import { updateUser } from "../actions/sessionActions";
 
 export default function HomePage() {
   return (
