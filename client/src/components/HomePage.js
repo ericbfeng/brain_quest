@@ -88,7 +88,7 @@ function HomePage({userInfo}) {
 
     return (
       <Box sx={{ width: '100%' , height: '100%'}}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: '#FFDCC6'}}>
           <Tabs value={value} onChange={handleChange} 
           variant="fullWidth"
           centered>
