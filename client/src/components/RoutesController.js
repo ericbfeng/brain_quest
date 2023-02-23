@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import TestBankPage from './TestBankPage';
 import SoloProblemPage from './SoloProblemPage';
-import HomePageIndex from './HomePageIndex';
 import HomePage from './HomePage';
 import ProfilePage from './ProfilePage';
 import CodeEditorPage from './CodeEditorPage'
@@ -17,7 +16,7 @@ class RoutesController extends React.Component {
       return (
         <BrowserRouter>
             <Routes>    
-                <Route path="/" element={<HomePageIndex />} />
+                <Route path="/" element={<HomePage />} />
                 <Route path="/soloproblempage/:questionId" element={<SoloProblemPage/>}/>
                 <Route path="/testbankpage/:initialQuestionType?/:initialQuestionSubtype?" element={<TestBankPage/>} />
                 <Route path="/profilepage/:pageUsername" element={<ProfilePage/>} />
