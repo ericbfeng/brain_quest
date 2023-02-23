@@ -106,8 +106,8 @@ export default function TestBankPage() {
     return (
         <div className="test-bank-container">
             <div className="test-bank-subheader">
-                <Link className="arrow-icon-container" to="/">
-                    <BsArrowLeftShort className="arrow-icon" />
+                <Link className="arrow-icon-container-top-bar" to="/">
+                    <BsArrowLeftShort className="arrow-icon-top-bar" />
                 </Link>
                 <SubheaderButton questionType="SAT"/>
                 <SubheaderButton questionType="ACT"/>

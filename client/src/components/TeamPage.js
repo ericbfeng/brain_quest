@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {Link} from "react-router-dom";
+import { BsArrowLeftShort } from 'react-icons/bs';
 import { useSelector } from "react-redux";
 import { allQuestions } from '../question_bank/questions';
 import NumericInput from 'react-numeric-input';
@@ -25,12 +26,18 @@ function TeamChat({socket, team}) {
   }
 
   const handleSubmit = () => {
+    if(!messageEntered){
+      return;
+    }
     socket.emit('team_send_message', {name: userInformation.username, message: messageEntered, team});
     setMessageEntered("");  
   }
   
   return (
     <div>
+      <div className="team-chat-display-container">
+        {renderTeamChat()}
+      </div>
       <div>
         <input 
           value={messageEntered} 
@@ -39,9 +46,6 @@ function TeamChat({socket, team}) {
           onChange={(e) => setMessageEntered(e.target.value)}
         />
         <button onClick={handleSubmit}>Send</button>
-      </div>
-      <div className="team-chat-display-container">
-        {renderTeamChat()}
       </div>
     </div>
   )
@@ -81,11 +85,11 @@ class AnswerChoices extends React.Component {
 
   render() {
       return (
-        <form onSubmit={this.handleSubmit}>
-          <select value={this.state.value} onChange={this.handleChange}>
+        <form className="answer-choices-container" onSubmit={this.handleSubmit}>
+          <select className="answer-choices-options" value={this.state.value} onChange={this.handleChange}>
               {this.getOptions()}
           </select>
-          <input type="submit" value="Submit" />
+          <input className="question-submit-button" type="submit" value="Submit" />
         </form>
       );
     }
@@ -130,12 +134,15 @@ export default function TestPage({socket}) {
     socket.on('user_failed_to_join_team', ({team, username}) => {
       if(username === userInformation.username){
         updatePageToShow("JOIN/CREATE");
-        updateJoinCreateErrorMessage("Could not join team: " + team + ". Please make sure it exists.");
+        updateJoinCreateErrorMessage("Could not join team: " + team + ". Make sure the team exists and hasn't started quiz yet.");
       }
     });
 
-    socket.on('leader_started_quiz', () => {
+    socket.on('leader_started_quiz', ({numQuizQuestions}) => {
       updatePageToShow("QUIZ");
+      updateCurrentQuestionIndex(0);
+      alert(numQuizQuestions);
+      updateNumQuizQuestions(numQuizQuestions);
     });
 
     socket.on('answer_was_attempted', ({correct, username}) => {
@@ -159,7 +166,7 @@ export default function TestPage({socket}) {
     socket.on('user_left_team_page', ({socketId}) => {
       // If the team leader left, we want all team members to be kicked from
       // the team and returned back to the JOIN/CREATE screen.
-      if(socketId === teamLeaderSocketId){
+      if(socketId === teamLeaderSocketId && pageToShow !== "SCORES"){
         updatePageToShow("JOIN/CREATE");
         updateJoinCreateErrorMessage("Team Leader Has Suddenly Left! Please join / create a new team.")
         updateTeam('');
@@ -168,7 +175,7 @@ export default function TestPage({socket}) {
       }
 
       // We only care if a team member leaves before the quiz is started.
-      if(pageToShow !== "JOIN/CREATE" && pageToShow !== "WAITING"){
+      if(pageToShow === "QUIZ" || pageToShow === "SCORES"){
         return;
       }
 
@@ -204,6 +211,9 @@ export default function TestPage({socket}) {
   // ---------------------------------------------------
   const GetJoinCreateView = () => {
     const handleJoinTeam = () => {
+      if(!teamNameEntered){
+        return;
+      }
       socket.emit("user_wants_to_join_team",
        {team: teamNameEntered,
         username: userInformation.username});
@@ -214,24 +224,27 @@ export default function TestPage({socket}) {
     }
 
     return (
-      <div>
-        <div>
-          Welcome to the TeamPage! Here you can join or create 
-          a team to complete one of our quizzes!
+      <div className="create-join-container">
+        <div className="create-join-text">
+          Welcome to the TeamPage! 
+          <br></br>
+          Here you can join or create a team to complete one of our quizzes!
         </div>
-        <div className="team-page-create-join-container">
-          <div>
+        <div className="create-join-button-container">
+          <div className="create-join-existing-team-container">
             <input 
               value={teamNameEntered} 
               type="text" 
               placeholder="Existing Team" 
               onChange={(e) => updateTeamNameEntered(e.target.value)}
             />
-            <button onClick={handleJoinTeam}>Join Team</button>
+            <button className="create-join-button-existing-team" onClick={handleJoinTeam}>Join Team</button>
           </div>
-          <button onClick={handleCreateTeam}>Create A Team</button>
+          <div className="create-join-new-team-container">
+            <button className="create-join-button-new-team" onClick={handleCreateTeam}>Create A Team</button>
+          </div>
         </div>
-        <div>
+        <div className="create-join-error-text">
           {joinCreateErrorMessage ? joinCreateErrorMessage: ""}
         </div>
       </div>
@@ -242,30 +255,30 @@ export default function TestPage({socket}) {
   // WAITING VIEW
   // ---------------------------------------------------
   const GetWaitingView = () => {
-    return <div>
+    return <div className="waiting-view-container">
       {isTeamLeader && 
-        <div>
-          You Are The Team Leader.
-          <br></br>
-          Please tell others to join your team: {team}
-          <br></br>
-          Here Are The People Currently In Your Team:
-          <br></br>
-          {JSON.stringify(teamMembers.map(member => member.username))}
-          <br></br>
-          You are responsible for starting the quiz and selecting the number of questions:
-          <br></br>
-          <br></br>
-          <NumericInput min={1} max={allQuestions.length} value={numQuizQuestions} onChange={(newValue) => updateNumQuizQuestions(newValue)}/>
-          <br></br>
-          <button onClick={() => socket.emit("signal_quiz_start_to_team", {team})}>Start Quiz</button>
+        <div className="waiting-view-leader-container">
+          <div className="waiting-view-leader-text">
+            You Are The Team Leader.
+            <br></br>
+            Please tell others to join your team: {team}
+            <br></br>
+            <br></br>
+            Here Are The People Currently In Your Team: {JSON.stringify(teamMembers.map(member => member.username))}
+          </div>
+          <div className="waiting-view-leader-button">
+            <NumericInput min={1} max={allQuestions.length} value={numQuizQuestions} onChange={(newValue) => updateNumQuizQuestions(newValue)}/>
+            <button className="waiting-view-button" onClick={() => socket.emit("signal_quiz_start_to_team", {team, numQuizQuestions})}>Start Quiz</button>
+          </div>
         </div>
       }
       {!isTeamLeader &&
-        <div>
+        <div className="waiting-view-member-container">
           You have joined the following team: {team}
           <br></br>
           Please wait for your team leader, {teamLeaderName}, to start the quiz!
+          <br></br>
+          In the meanwhile, chat with your team!
         </div>
       }
     </div>
@@ -284,7 +297,7 @@ export default function TestPage({socket}) {
     // We just need to wait for the leader to go ahead and show the results.
     if(currentQuestionIndex === questionsToAsk.length){
       return (
-        <div>
+        <div className="quiz-view-text">
           {!isTeamLeader && 
             <div>
               The Quiz Is Over.
@@ -297,7 +310,7 @@ export default function TestPage({socket}) {
               <br></br>
               Please publish the results for the team when you're ready!
               <br></br>
-              <button onClick={() => socket.emit("signal_scores_to_team",
+              <button className="quiz-view-button-complete" onClick={() => socket.emit("signal_scores_to_team",
                {team, teamMembers: [...teamMembers, {username: userInformation.username }], answerAttempts})}>Show Scores</button>
             </div>}
         </div>
@@ -315,11 +328,17 @@ export default function TestPage({socket}) {
 
     return (
       <div className="quiz-view-master-container">
-        <div>
-          {"Question #" + (currentQuestionIndex + 1)}
+        <div className="quiz-view-question-container">
+          <div className="quiz-view-question-number">
+            {"Question #" + (currentQuestionIndex + 1)}
+          </div>
+          <div className="quiz-view-question-text">
+            {questionsToAsk[currentQuestionIndex].question}
+          </div>
         </div>
-        {questionsToAsk[currentQuestionIndex].question}
-        <AnswerChoices choices={questionsToAsk[currentQuestionIndex].choices} onSubmit={onAnswerSubmission} />
+        <div className="quiz-view-answer-container">
+          <AnswerChoices choices={questionsToAsk[currentQuestionIndex].choices} onSubmit={onAnswerSubmission} />
+        </div>
       </div>
     )
   }
@@ -329,44 +348,62 @@ export default function TestPage({socket}) {
   // ---------------------------------------------------
   const GetScoresView = () => {
 
+    const calculateScore = (numCorrect, numAttempted) => {
+      const numIncorrect = numAttempted - numCorrect;
+
+      // Each correct quesiton is +1 points, each incorrect question is -0.5 points.
+      return (numCorrect * 1) - (numIncorrect * 0.5);
+    }
+
     const renderUserRecords = () => {
       return teamMembers.map(({username}, index) => (
         <div key={index}>
           {username}: 
-            {answerAttempts.filter(attempt => attempt.username === username && attempt.correct).length} /
-            {answerAttempts.filter(attempt => attempt.username === username).length}
+            {calculateScore(answerAttempts.filter(attempt => attempt.username === username && attempt.correct).length, answerAttempts.filter(attempt => attempt.username === username).length)}
         </div>
       ))
     }
 
-    return <div>
-      You have all finished the quiz! Here are the results for each user (Correct / Attempted):
+    return <div className="scores-view-text">
+      You have all finished the quiz! 
+      <br></br>
+      Here are the results for each user:
+      <br></br> 
+      +1 for each correct answer
+      <br></br>
+      -0.5 for each incorrect answer
       <br></br>
       <br></br>
       {renderUserRecords()}
       <br></br>
-      TODO: We might want to update a user's profile to reflect how many quizzes they have won.
-      Also, we might want to say who "WON" the competition by having a point system.
-      Something like, every correct answer gives a user one point, every incorrect answer gives the user -0.5 points.
+      TODO: Add API to record who won this competition. Also could sort the team by scores.
     </div>
   }
 
   return (
-    <div>
-      <Link onClick={() => socket.emit("indicate_user_left_page")} to="/">Go Back To HomePage</Link>
-      <br></br>
+    <div className="team-page-master-container">
+      <div className="team-page-header-container">
+        <Link onClick={() => socket.emit("indicate_user_left_page", {
+          teamName: team,
+        })} to="/" >
+          <BsArrowLeftShort className="arrow-icon-team-page" />
+        </Link>
+        <div className="team-page-header-text-container">
+          {pageToShow}
+        </div>
+      </div>
       <div className="team-page-body-container">
-        <div>
+        <div className="team-page-body-view-container">
           {pageToShow === "JOIN/CREATE" && GetJoinCreateView()}
           {pageToShow === "WAITING" && GetWaitingView()}
           {pageToShow === "QUIZ" && GetQuizView()}
           {pageToShow === "SCORES" && GetScoresView()}
         </div>
-        <div>
-          {pageToShow !== "JOIN/CREATE" &&
-            <TeamChat socket={socket} team={team}></TeamChat>
-          }
-        </div>
+        {pageToShow !== "JOIN/CREATE" && 
+          <div className="team-page-body-text-container">
+              <TeamChat socket={socket} team={team}></TeamChat>
+          </div>
+        }
       </div>
     </div>
   );

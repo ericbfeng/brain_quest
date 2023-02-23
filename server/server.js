@@ -239,6 +239,8 @@ const io = require("socket.io")(server, {
 });
 
 const teamToSocketId = {};
+const socketIdToTeam = {};
+const teamsWhoStartedQuiz = new Set();
 
 io.on('connection', socket => {
   const connectionSocketId = socket.id;
@@ -253,11 +255,12 @@ io.on('connection', socket => {
     // and the person who created the room.
     socket.join(username);
     teamToSocketId[username] = connectionSocketId;
+    socketIdToTeam[connectionSocketId] = username;
     io.emit('user_created_a_team', {username});
   });
 
   socket.on('user_wants_to_join_team', ({team, username}) => {
-    if(!io.sockets.adapter.rooms.get(team)){
+    if(!io.sockets.adapter.rooms.get(team) || teamsWhoStartedQuiz.has(team)){
         io.emit('user_failed_to_join_team', {team, username});
         return;
     }
@@ -265,12 +268,25 @@ io.on('connection', socket => {
     io.to(team).emit("user_joined_team", {team, teamLeaderSocketId: teamToSocketId[team], username, socketId: socket.id});
   });
 
-  socket.on('indicate_user_left_page', () => {
+  socket.on('indicate_user_left_page', ({teamName}) => {
+    // If the leader leaves, then delete the room.
+    if (connectionSocketId in socketIdToTeam) {
+        console.log("LEADER LEFT. ROOM BEING DELETED");
+        teamsWhoStartedQuiz.delete(teamName);
+        io.in(socketIdToTeam[connectionSocketId]).socketsLeave(socketIdToTeam[connectionSocketId]);
+    } else {
+        // If a member leaves the room, we don't want them to be subscribed to that
+        // team anymore. 
+        console.log("MEMBER LEFT: " + teamName);
+        socket.leave(teamName);
+    }
     io.emit('user_left_team_page', {socketId: connectionSocketId});
+
   });
 
-  socket.on('signal_quiz_start_to_team', ({team}) => {
-    io.to(team).emit("leader_started_quiz");
+  socket.on('signal_quiz_start_to_team', ({team, numQuizQuestions}) => {
+    teamsWhoStartedQuiz.add(team);
+    io.to(team).emit("leader_started_quiz", ({numQuizQuestions}));
   });
 
   socket.on('signal_answer_attempt_to_team', ({team, correct, username}) => {
@@ -288,6 +304,14 @@ io.on('connection', socket => {
   socket.on('disconnect', function(socket){
     console.log("SOCKET LEFT: " + connectionSocketId);
     io.emit('user_left_team_page', {socketId: connectionSocketId});
+
+    console.log(JSON.stringify(socketIdToTeam));
+    // If the leader left the room, then delete the room.
+    if (connectionSocketId in socketIdToTeam) {
+        console.log("LEADER LEFT. ROOM BEING DELETED");
+        teamsWhoStartedQuiz.delete(socketIdToTeam[connectionSocketId]);
+        io.in(socketIdToTeam[connectionSocketId]).socketsLeave(socketIdToTeam[connectionSocketId]);
+    }
   });
 })
 
