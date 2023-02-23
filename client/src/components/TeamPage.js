@@ -141,7 +141,6 @@ export default function TestPage({socket}) {
     socket.on('leader_started_quiz', ({numQuizQuestions}) => {
       updatePageToShow("QUIZ");
       updateCurrentQuestionIndex(0);
-      alert(numQuizQuestions);
       updateNumQuizQuestions(numQuizQuestions);
     });
 
