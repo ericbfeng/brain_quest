@@ -3,6 +3,8 @@ import CodeEditorWindow from "./CodeEditor";
 import Select from "react-select";
 import { languageOptions } from "../assets/languageOptions";
 import { defaultCode } from "../assets/defaultCode";
+import {Link } from "react-router-dom";
+import { BsArrowLeftShort } from 'react-icons/bs';
 import '../styles/CodeEditorPage.css';
 
 
@@ -69,15 +71,20 @@ function CodeEditorPage() {
     return (
           <div className="row">
               <div className="column left">
-                <div className="language-dropdown">
-                  <LanguagesDropdown onSelectChange={onSelectChange} />
+                <div className="subheader-column-left">
+                  <Link to="/" >
+                    <BsArrowLeftShort className="arrow-icon" />
+                  </Link>
+                  <div className="language-dropdown">
+                    <LanguagesDropdown onSelectChange={onSelectChange} />
+                  </div>
                 </div>
                 <div className="code-editor-box">
-                <CodeEditorWindow
-                    code={code}
-                    onChange={onChange}
-                    language={language.value}
-                  /> 
+                  <CodeEditorWindow
+                      code={code}
+                      onChange={onChange}
+                      language={language.value}
+                    /> 
                 </div>
               </div>
               <div className="column right">
