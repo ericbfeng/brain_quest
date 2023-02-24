@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { BsArrowLeftShort } from 'react-icons/bs';
 import { connect } from "react-redux";
 import { updateUser } from "../actions/sessionActions";
@@ -6,11 +5,87 @@ import {Link, useParams} from "react-router-dom";
 import '../styles/ProfilePage.css';
 import '../styles/TestBankPage.css';
 
+import React, { useState, useEffect } from "react";
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Unstable_Grid2';
+import UserDash from "./UserDash";
+import Stack from '@mui/material/Stack';
+import FriendsTab from "./FriendsTab";
+import PastTest from "./PastTests";
+import { tabClasses } from "@mui/material";
+import {useNavigate } from 'react-router-dom';
+
+
+
+
+
+function Userinfo(){
+
+  useEffect(() => {
+    // Update the document title using the browser API
+            
+      fetch(`/getfriends`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Failed to retrieve friends");
+          }
+        })
+        .then((data) => {
+          console.log(data);
+          // Do something with the response data
+        })
+        .catch((error) => {
+          console.error(error);
+          // Handle the error
+        });
+
+  });
+
+  
+
+
+  return(
+
+    <Box sx={{ flexGrow: 1 }}>
+    <Stack spacing={2}>
+      <Grid container spacing={2}>
+        <Grid xs={8} sx={{ height: "100%" }}>
+          <UserDash />
+        </Grid>
+        <Grid xs={4} sx={{ height: "100%" }}>
+          <FriendsTab tablabel={"Friends"} />
+        </Grid>
+        <Grid xs={8} sx={{ height: "100%" }}>
+          <PastTest />
+        </Grid>
+        <Grid xs={4} sx={{ height: "100%" }}>
+          <FriendsTab tablabel={"Add New Friends"} />
+        </Grid>
+      </Grid>
+    </Stack>
+  </Box>
+
+
+  );
+}
+
 function ProfilePage({userInfo, updateUser}) {  
 
     // get the username of the current profile page we are viewing
     let { pageUsername } = useParams();
+
+    let [friends, setFriends] = useState("Edit");
   
+
 
     let [username, setUsername] = useState(pageUsername);
     let [password, setPassword] = useState();
@@ -49,7 +124,7 @@ function ProfilePage({userInfo, updateUser}) {
   
 
     // boolean to denote if we are viewing our own profile or not
-    let isCurrUser = (pageUsername == userInfo.username);    
+    let isCurrUser = (pageUsername === userInfo.username);    
     console.log("Is curr user:", isCurrUser);
    
 
@@ -128,7 +203,7 @@ function ProfilePage({userInfo, updateUser}) {
     }
 
     return (
-      <div>
+      <Stack spacing={2}>
         <div className="profile-header"> 
           <Link className="arrow-icon-container" to="/" >
             <BsArrowLeftShort className="arrow-icon" />
@@ -159,9 +234,18 @@ function ProfilePage({userInfo, updateUser}) {
             <button className="edit-button" onClick={() => handleClick("occupation")}> {bEdit3} </button>
           </div>
         </div>
-      </div>
+      
+      <Userinfo/>
+      
+      </Stack>
     );
   };
+
+
+
+
+
+
 
   const mapStateToProps = state => ({
     userInfo: state.session.userInformation,

@@ -12,6 +12,11 @@ const server = app.listen(5000, () => {console.log(("Server started on port 5000
 require("./database_schemas/userDetails");
 const User = mongoose.model("UserInfo");
 
+
+
+require("./database_schemas/friendDetails");
+const Friend = mongoose.model("FriendInfo");
+
 const uri = "mongodb+srv://team21CS194:team21CS194Password@cs194cluster.iq8hp8i.mongodb.net/?retryWrites=true&w=majority"
 
 async function connect() {
@@ -79,39 +84,59 @@ app.post("/getUser/", async (req, res) => {
  // APIs that are used by the application.
  // ----------------------------------------------------------------------
 
-app.post("/register", (req, res) => {
-    const {userName, password, occupation} = req.body;
-
-    User.find({
-        username: userName
-    }, (err, result) => {
-        if(err){
-            res.statusMessage = "User registration failed";
-            return res.status(500).end();
+ app.post("/register", (req, res) => {
+    const { userName, password, occupation } = req.body;
+    User.find(
+      {
+        username: userName,
+      },
+      (err, result) => {
+        if (err) {
+          res.statusMessage = "User registration failed";
+          return res.status(500).end();
         } else if (result.length > 0) {
-            res.statusMessage = "Username already taken.";
-            return res.status(500).end();
+          res.statusMessage = "Username already taken.";
+          return res.status(500).end();
         } else {
-            // No user with the given userName exists in the DB.
-            User.create({
-                username: userName,
-                password: password,
-                occupation: occupation,
-                record: [],
-            }, (err, result) => {
-                if(err) {
-                    res.statusMessage = "User registration failed";
-                    return res.status(500).end();
-                } else {
-                    return res.status(200).send({ 
+          // No user with the given userName exists in the DB.
+          User.create(
+            {
+              username: userName,
+              password: password,
+              occupation: occupation,
+              record: [],
+            },
+            (err, user) => {
+              if (err) {
+                res.statusMessage = "User registration failed";
+                return res.status(500).end();
+              } else {
+                // User created successfully, now create a new friend
+                Friend.create(
+                  {
+                    username: userName,
+                    friends: [],
+                  },
+                  (err, friend) => {
+                    if (err) {
+                      res.statusMessage = "User registration failed";
+                      return res.status(500).end();
+                    } else {
+                      console.log(friend)
+                      return res.status(200).send({
                         userRegistered: true,
-                        registrationMessage: "User successfully registered."
-                    })
-                }
-            });
+                        registrationMessage: "User successfully registered.",
+                      });
+                    }
+                  }
+                );
+              }
+            }
+          );
         }
-    });
-});
+      }
+    );
+  });
 
 app.post("/login", (req, res) => {
     const {username, password} = req.body;
@@ -143,6 +168,35 @@ app.post("/login", (req, res) => {
         }
     });
 });
+
+
+
+/* 
+* API used to get list of friends of user
+
+**/
+
+app.get("/getfriends", async function (request, response) {
+    if (!request.session.username) {
+      response.status(401).send("Please Sign in First");
+      return;
+    }
+    try {
+      let friend = await Friend.findOne({ username: request.session.username });
+      if (!friend) {
+        response.status(404).send("No friends found for this user");
+        return;
+      }
+      response.status(200).send(friend.friends);
+    } catch (err) {
+      response.status(400).send(err.message);
+    }
+  });
+
+
+
+
+
 
 app.post("/add-correct-question-id", (req, res) => {
     const {questionId} = req.body;

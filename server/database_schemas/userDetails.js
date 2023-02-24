@@ -6,6 +6,10 @@ const UserDetailsSchema = new mongoose.Schema(
         password: String,
         occupation: String,
         record: [Number],
+        friends: [{
+            "usrname" : String,
+            "state": String
+        }]
     },
     {
         collection: "UserInfo",

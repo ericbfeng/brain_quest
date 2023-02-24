@@ -23,6 +23,7 @@ function LoginOrRegister({loginUser}) {
     // They needed to provide values to all required fields.
     if(!registerUsername || !registerPassword || !registerConfirmPassword 
       || !registerOccupation || registerOccupation === "none"){
+      console.log(registerOccupation);
       alert("Please fill all fields");
       return;
     }
