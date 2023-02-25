@@ -213,7 +213,11 @@ app.get("/getfriends", async function (request, response) {
         return res.status(404).json({ message: "User not found" });
       }
       // Add the new friend object to the friends array
-      friend_list.friends.push({ usrname: friendName.friendName, state: "temp"  });
+      var to_add = { usrname: friendName.friendName, state: "temp"  }
+      if (to_add in friend_list.friends){
+        return res.status(200).json({ message: "User already added" });
+      }
+      friend_list.friends.push(to_add );
       // Save the updated user object
       await friend_list.save();  
       // Return a success response
