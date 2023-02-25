@@ -114,7 +114,7 @@ app.post("/getUser/", async (req, res) => {
                 // User created successfully, now create a new friend
                 Friend.create(
                   {
-                    username: userName,
+                    user: userName,
                     friends: [],
                   },
                   (err, friend) => {
@@ -181,8 +181,9 @@ app.get("/getfriends", async function (request, response) {
       response.status(401).send("Please Sign in First");
       return;
     }
+    console.log(request.session.username);
     try {
-      let friend = await Friend.findOne({ username: request.session.username });
+      let friend = await Friend.findOne({ user: request.session.username });
       if (!friend) {
         response.status(404).send("No friends found for this user");
         return;
@@ -195,6 +196,36 @@ app.get("/getfriends", async function (request, response) {
 
 
 
+
+
+  app.put("/friends", async (req, res) => {
+    if (!req.session.username) {
+        res.status(401).send("Please Sign in First");
+        return;
+    }
+    const username  = req.session.username;
+    const friendName  = req.body;
+    try {
+      // Find the user by username
+      const friend_list = await Friend.findOne({ user: username });
+      // If the user is not found, return a 404 error
+      if (!friend_list) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      // Add the new friend object to the friends array
+      friend_list.friends.push({ usrname: friendName.friendName, state: "temp"  });
+      // Save the updated user object
+      await friend_list.save();  
+      // Return a success response
+      return res.status(200).json({
+        message: `Added ${friendName} as a friend for ${username}`,
+        friend_list,
+      });
+    } catch (error) {
+      // If an error occurs, return a 500 error with the error message
+      return res.status(500).json({ message: error.message });
+    }
+  });
 
 
 

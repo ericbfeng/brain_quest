@@ -22,9 +22,38 @@ export default function FriendsTab({tablabel}){
           }),
         );
     }
+    
 
+
+    
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
+
+
+    const handleChange = async(event) => {
+      console.log(event);
+      var friendName = "bb";
+      const addFriend =  async (friendName) => {
+        const url = `/friends`;
+        const data = { friendName };
+      
+        try {
+          const response = await fetch(url, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+      
+          const responseData = await response.json();
+          console.log(responseData);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      
+      addFriend(friendName);
+
+    };
     
     return(<Card  sx={{ backgroundColor: "AntiqueWhite" }} > 
         <CardContent >
@@ -36,7 +65,7 @@ export default function FriendsTab({tablabel}){
               {generate(
                 <ListItem
                   secondaryAction={
-                    <IconButton edge="end" aria-label="chat">
+                    <IconButton onClick = {handleChange} edge="end" aria-label="chat">
                     { tablabel ===  "Friends" ? <ChatIcon />: <PersonAddIcon/>} 
                     </IconButton>
                   }
