@@ -32,7 +32,7 @@ export default function FriendsTab({tablabel}){
 
     const handleChange = async(event) => {
       console.log(event);
-      var friendName = "bb";
+      var friendName = "qq";
       const addFriend =  async (friendName) => {
         const url = `/friends`;
         const data = { friendName };

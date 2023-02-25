@@ -213,16 +213,28 @@ app.get("/getfriends", async function (request, response) {
         return res.status(404).json({ message: "User not found" });
       }
       // Add the new friend object to the friends array
-      var to_add = { usrname: friendName.friendName, state: "temp"  }
-      if (to_add in friend_list.friends){
-        return res.status(200).json({ message: "User already added" });
+      //var to_add = { }
+      //if (to_add in friend_list.friends){
+      //  return res.status(200).json({ message: "User already added" });
+      //}
+      friend_list.friends.push({usrname: friendName.friendName, state: "temp" } );
+
+
+      const other_friend = await Friend.findOne({ user: friendName.friendName});
+      
+
+      if (!friend_list) {
+        return res.status(404).json({ message: "User not found" });
       }
-      friend_list.friends.push(to_add );
+
+      other_friend.friends.push({usrname: username , state: "temp" } );
+      
       // Save the updated user object
       await friend_list.save();  
+      await other_friend.save();  
       // Return a success response
       return res.status(200).json({
-        message: `Added ${friendName} as a friend for ${username}`,
+        message: `Added ${friendName}, ${username} as friends`,
         friend_list,
       });
     } catch (error) {
