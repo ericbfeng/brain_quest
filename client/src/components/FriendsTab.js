@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
@@ -15,14 +15,47 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 export default function FriendsTab({tablabel}){
 
-    function generate(element) {
-        return [0, 1, 2].map((value) =>
+
+    
+    let [friends, setFriends] = useState([]);
+    
+  function generate(element) {
+        return friends.map((friend,idx) =>
           React.cloneElement(element, {
-            key: value,
+            key: idx,
+            fname: friend.usrname
           }),
         );
     }
     
+
+
+  useEffect(() => {
+    // Update the document title using the browser API
+            
+      fetch(`/getfriends`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Failed to retrieve friends");
+          }
+        })
+        .then((data) => {
+          console.log(data)
+          setFriends(data)
+
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+  }, [] );
 
 
     
@@ -31,7 +64,9 @@ export default function FriendsTab({tablabel}){
 
 
     const handleChange = async(event) => {
-      console.log(event);
+      if(tablabel ===  "Friends"){
+        return
+      }
       var friendName = "qq";
       const addFriend =  async (friendName) => {
         const url = `/friends`;
@@ -62,26 +97,25 @@ export default function FriendsTab({tablabel}){
         </Typography>
         <Card sx={{ backgroundColor: "white" }}>
         <List dense={dense}>
-              {generate(
-                <ListItem
-                  secondaryAction={
-                    <IconButton onClick = {handleChange} edge="end" aria-label="chat">
-                    { tablabel ===  "Friends" ? <ChatIcon />: <PersonAddIcon/>} 
-                    </IconButton>
-                  }
-                >
-                  <ListItemAvatar>
-                    <Avatar>
-                    U
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Friend"
-                    secondary={secondary ? 'Secondary text' : null}
-                  />
-                </ListItem>,
-              )}
-
+                        {generate(
+                            <ListItem
+                                secondaryAction={
+                                    <IconButton onClick = {handleChange} edge="end" aria-label="chat">
+                                        { tablabel ===  "Friends" ? <ChatIcon />: <PersonAddIcon/>} 
+                                    </IconButton>
+                                }
+                            >
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        U
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary= "Friend"
+                                    secondary={secondary ? 'Secondary text' : null}
+                                />
+                            </ListItem>
+                        )}
         </List>
         </Card>
         </CardContent>
