@@ -4,7 +4,6 @@ import SearchBar from "./SearchBar";
 import { useSelector } from "react-redux";
 import '../styles/CommunityPage.css';
 
-
 function GlobalChat({socket}) {
   const [globalChat, setGlobalChat] = useState([]);
   const [messageEntered, setMessageEntered] = useState('');
@@ -64,10 +63,11 @@ export default function CommunityPage({socket}) {
     <div className="community-page-body-container">
       <Link to="/">Go Back To HomePage</Link>
       <div>
-        This is the Community Page.
+        This is the Community Page. 
         <br></br>
         TODO: Change this text to tell people what the 2 components below do.
       </div>
+
       <div className="community-page-component-container">
         <div className="community-page-search-bar">
           <SearchBar data={allUsersData} filterBy="username"/>

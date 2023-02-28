@@ -5,19 +5,36 @@ import { useSelector } from "react-redux";
 import TopBar from './components/TopBar';
 import './styles/App.css';
 
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+
+const config = {
+  loader: { load: ["input/asciimath"] },
+  asciimath: {
+    displaystyle: true,
+    delimiters: [
+      ["$", "$"],
+      ["`", "`"]
+    ]
+  }
+};
+
+
+
 export default function App() {
   const isLoggedIn = useSelector((state) => state.session.isLoggedIn);
   return (
-    <div className="app-container">
-      <div className="app-head-screen">
-        <TopBar />
+    <MathJaxContext config={config}>
+      <div className="app-container">
+        <div className="app-head-screen">
+          <TopBar />
+        </div>
+        <div className="app-body-screen">
+          {isLoggedIn ? 
+            <RoutesController />:
+            <LoginPage />
+          }
+        </div>
       </div>
-      <div className="app-body-screen">
-        {isLoggedIn ? 
-          <RoutesController />:
-          <LoginPage />
-        }
-      </div>
-    </div>
+    </MathJaxContext>
   );
 }

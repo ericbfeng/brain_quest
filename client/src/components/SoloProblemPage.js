@@ -6,6 +6,9 @@ import { updateUser } from "../actions/sessionActions";
 import { BsArrowLeftShort } from 'react-icons/bs';
 import '../styles/SoloProblemPage.css';
 
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+
+
 class AnswerChoices extends React.Component {
     constructor(props) {
       super(props);
@@ -106,7 +109,9 @@ function SoloProblemPage({updateUser}) {
         </div>
         <div className="solo-problem-page-body-container">
           <div className="solo-problem-page-body-question">
+            <MathJax hideUntilTypeset={"first"}>
             {question.question}
+            </MathJax>
           </div>
           <div className="solo-problem-page-body-choices">
             <AnswerChoices choices={question.choices} onSubmit={onAnswerSubmission} />
