@@ -16,6 +16,9 @@ import FriendsTab from "./FriendsTab";
 import PastTest from "./PastTests";
 import { tabClasses } from "@mui/material";
 import {useNavigate } from 'react-router-dom';
+import ReccomendFriends from '../Utils/FriendRecommendation'
+import '../styles/CommunityPage.css';
+import SearchBar from "./SearchBar";
 
 
 
@@ -62,10 +65,13 @@ function Userinfo(){
           <UserDash />
         </Grid>
         <Grid xs={4} sx={{ height: "100%" }}>
-          <FriendsTab tablabel={"Friends"} />
+          <FriendsTab tablabel={"Friends"} renderState={"accepted"}/>
         </Grid>
         <Grid xs={8} sx={{ height: "100%" }}>
           <PastTest />
+        </Grid>
+        <Grid xs={4} sx={{ height: "100%" }}>
+          <FriendsTab tablabel={"Pending Invites"} renderState={"pending"}/>
         </Grid>
         <Grid xs={4} sx={{ height: "100%" }}>
           <FriendsTab tablabel={"Add New Friends"} />
@@ -125,14 +131,13 @@ function ProfilePage({userInfo, updateUser}) {
 
     // boolean to denote if we are viewing our own profile or not
     let isCurrUser = (pageUsername === userInfo.username);    
-    console.log("Is curr user:", isCurrUser);
-   
 
     
     if (!occupation) {occupation = "Unknown"};
 
     const handleClick = (origin) => {
-
+      console.log('hi');
+      ReccomendFriends(0);
       let update = false;
 
       // Start by editing the the correct button state
@@ -208,7 +213,7 @@ function ProfilePage({userInfo, updateUser}) {
           <Link className="arrow-icon-container" to="/" >
             <BsArrowLeftShort className="arrow-icon" />
           </Link>
-          <div className="profile-questions-container">
+          {/* <div className="profile-questions-container">
             <img className="profile-picture" src="../default_profile_pic.jpeg" alt="../default_profile_pic.jpeg" />
             <div className="profile-question-text"> Questions Answered: {userInfo.record.filter((value, index, array) => array.indexOf(value) === index).length} </div>
           </div>
@@ -232,7 +237,7 @@ function ProfilePage({userInfo, updateUser}) {
               <FieldText type={bEdit3} field="occupation"/>
             </div>
             <button className="edit-button" onClick={() => handleClick("occupation")}> {bEdit3} </button>
-          </div>
+          </div> */}
         </div>
       
       <Userinfo/>

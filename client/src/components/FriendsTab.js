@@ -12,21 +12,85 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import ChatIcon from '@mui/icons-material/Chat';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import SearchBar from "./SearchBar";
+import { Button } from '@mui/material';
 
-export default function FriendsTab({tablabel}){
-
+export default function FriendsTab({tablabel, renderState}){
 
     
-    let [friends, setFriends] = useState([]);
-    
-  function generate(element) {
-        return friends.map((friend,idx) =>
-          React.cloneElement(element, {
-            key: idx,
-            fname: friend.usrname
-          }),
-        );
+  let [friends, setFriends] = useState([]);
+  const [allUsersData, setAllUsersData] = useState([]);
+
+  useEffect(() => {
+    if(allUsersData.length === 0) {
+      fetch('/UserInfo')
+      .then(res=> res.json())
+      .then(data => setAllUsersData(data))
+      .then(error => console.error(error));
     }
+  }, []);
+
+  function AddSearchBar(){
+    if (tablabel === "Add New Friends"){
+      return <SearchBar data={allUsersData} filterBy="username" page="profile"/>
+    } else{
+      return null
+    }
+  }
+
+  async function removeFriend(e){
+    const friend = e.target.value.toString();
+    console.log("remove friend: ", friend);
+    await fetch ('/unfriend', {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ friend })
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("Failed to retrieve friends");
+      }
+    })
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+  }
+
+  function friendUI(friend){
+    if (friend.state === renderState){
+      return (<ListItem key={friend._id.toString()}
+            secondaryAction={
+                <IconButton onClick = {handleChange} edge="end" aria-label="chat">
+                    { tablabel ===  "Friends" ? <ChatIcon />: <PersonAddIcon/>} 
+                </IconButton>
+            }
+            >
+              <ListItemAvatar>
+                  <Avatar>
+                      U
+                  </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                  primary={friend.usrname}
+                  secondary={secondary ? 'Secondary text' : null}
+              />
+              <Button onClick={removeFriend} value={friend.usrname}> X </Button>
+            </ListItem>
+  
+          );
+    } 
+    return null;
+  }
+    
+  function generate(items) {
+    return items.map((friend) => friendUI(friend));
+  }
     
 
 
@@ -47,7 +111,6 @@ export default function FriendsTab({tablabel}){
           }
         })
         .then((data) => {
-          console.log(data)
           setFriends(data)
 
         })
@@ -67,9 +130,10 @@ export default function FriendsTab({tablabel}){
       if(tablabel ===  "Friends"){
         return
       }
-      var friendName = "qq";
+      var friendName = "ww";
+      console.log("Quick Add");
       const addFriend =  async (friendName) => {
-        const url = `/friends`;
+        const url = `/quickadd`;
         const data = { friendName };
       
         try {
@@ -81,8 +145,8 @@ export default function FriendsTab({tablabel}){
       
           const responseData = await response.json();
           console.log(responseData);
-        } catch (error) {
-          console.error(error);
+        } catch(error) {
+          
         }
       };
       
@@ -92,35 +156,17 @@ export default function FriendsTab({tablabel}){
     
     return(<Card  sx={{ backgroundColor: "AntiqueWhite" }} > 
         <CardContent >
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            {tablabel}:
-        </Typography>
-        <Card sx={{ backgroundColor: "white" }}>
-        <List dense={dense}>
-                        {generate(
-                            <ListItem
-                                secondaryAction={
-                                    <IconButton onClick = {handleChange} edge="end" aria-label="chat">
-                                        { tablabel ===  "Friends" ? <ChatIcon />: <PersonAddIcon/>} 
-                                    </IconButton>
-                                }
-                            >
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        U
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary= "Friend"
-                                    secondary={secondary ? 'Secondary text' : null}
-                                />
-                            </ListItem>
-                        )}
-        </List>
-        </Card>
+          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+              {tablabel}:
+          </Typography>
+          {/* <Button onClick={handleChange}>a,nks.jtHKJDH</Button> */}
+          <Card sx={{ backgroundColor: "white" }}>
+            <AddSearchBar></AddSearchBar>
+            <List dense={dense}>
+              {generate(friends)}
+            </List>
+          </Card>
         </CardContent>
     </Card>)
 
 }
-
-
