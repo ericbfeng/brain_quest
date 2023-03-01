@@ -15,17 +15,20 @@ const Tests = [
 
     {      
         "test":  "SAT",
-        "subject": "Science" 
+        "subject": "Science", 
+        "id": 0
     },
 
     {      
         "test":  "SAT",
-        "subject": "Math" 
+        "subject": "Math",
+        "id": 1
     },
 
     {      
         "test":  "ACT",
-        "subject": "Math" 
+        "subject": "Math",
+        "id": 2
     }, 
 
 
@@ -34,7 +37,8 @@ const Tests = [
 
 function generate(element) {
     return Tests.map((value) => {
-    return React.cloneElement(element, value)}
+        return (<React.Fragment key={value.id}> {React.cloneElement(element, value)} </React.Fragment> 
+        );}
     );
 }
 

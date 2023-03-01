@@ -195,61 +195,229 @@ app.get("/getfriends", async function (request, response) {
   });
 
 
-
-
-
-  app.put("/friends", async (req, res) => {
-    if (!req.session.username) {
-        res.status(401).send("Please Sign in First");
-        return;
+app.get("/getfriends/:user", async function(request, response){
+  let user = request.params.user;
+  try {
+    let friend = await Friend.findOne({ user: user });
+    if (!friend) {
+      response.status(404).send("No friends found for this user");
+      return;
     }
-    const username  = req.session.username;
-    const friendName  = req.body;
-    try {
-      // Find the user by username
-      const friend_list = await Friend.findOne({ user: username });
-      // If the user is not found, return a 404 error
-      if (!friend_list) {
+    response.status(200).send(friend.friends);
+  } catch (err) {
+    response.status(400).send(err.message);
+  }
+});
+
+app.get("/userById/:id", async function(request, response){
+  let id = request.params.id
+  try{
+    let user = await User.findById(id).exec();
+    if (!user){
+      response.status(404).send($`User ${id} not found in database`);
+    }
+    response.status(200).send(user);
+  } catch (err){
+    response.status(400).send(err.message);
+  }
+});
+
+//Quick add friend (used for testing)
+// app.put("/quickadd",  async (req, res) => {
+//   console.log("quickadd");
+//   if (!req.session.username) {
+//     res.status(401).send("Please Sign in First");
+//     return;
+//   }
+//   const username  = req.session.username;
+//   const friendName  = req.body;
+//   try {
+//   // Find the user by username
+//   const user = await Friend.findOne({ user: username });
+//   if (!user) {
+//     return res.status(404).json({ message: "User not found" });
+//   }
+//   const friend = await Friend.findOne({ user: friendName.friendName });
+//   if (!friend) {
+//     return res.status(404).json({ message: "User not found" });
+//   }
+
+//   let there = false;
+//   for (let i = 0; i < user.friends.length; i++){
+//     if (user.friends[i]["usrname"] === friendName.friendName){
+//       user.friends[i]["state"] = "accepted";
+//       there = true;
+//     }
+//   }
+//   if (!there) user.friends.push({usrname: friendName.friendName, state: "accepted" } );
+
+//   there = false
+//   for (let i = 0; i < friend.friends.length; i++){
+//     if (friend.friends[i]["usrname"] === user){
+//       friend.friends[i]["state"] = "accepted";
+//     }
+//     there = true;
+//   }
+//   if (!there) friend.friends.push({usrname: user, state: "accepted" } );
+
+//   await user.save();
+//   await friend.save();
+//   return res.status(200).json({ message: "Quick add was a success" });
+
+// } catch (e){
+//   return res.status(500).json({ message: e.message });
+// }
+
+// });
+
+// Unfriends a user by removing both users from each other friends list 
+app.put("/unfriend", async (req, res) => {    
+
+  console.log("unfriend  API  called");
+
+  if (!req.session.username) {
+    res.status(401).send("Please Sign in First");
+    return;
+  }
+  const username  = req.session.username;
+  const friendName  = req.body.friend;
+
+  try{
+
+    async function removeUserFromFriendList(user, name){
+      index = -1
+      for (let i = 0; i < user.friends.length; i++){
+        if (user.friends[i]["usrname"] === name){
+          index = i;
+          break;
+        }
+      }
+
+      if (index === -1){
+        return false;
+      } else {
+        let newArr = user.friends;
+        newArr.splice(index, 1);
+        user.friends = newArr;
+        console.log(user);
+        await user.save();
+        return true;
+      }
+    }
+    
+    // First remove friend on users friend list
+    let user = await Friend.findOne({ user: username });
+    if (!user || !user.friends) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Now to remove user from the friend's friend list
+    let friend = await Friend.findOne({ user: friendName });
+    if (!friend || !friend.friends) {
+      return res.status(404).json({ message: "Friend not found" });
+    }
+
+    if (await removeUserFromFriendList(user, friendName) && await removeUserFromFriendList(friend, username)){
+      return res.status(200).json({ message: "Friend removed" });
+    } else{
+      return res.status(404).json({ message: "User not found" });
+    }
+
+  } catch(e){
+    return res.status(500).json({ message: e.message });
+  }
+
+  
+});
+
+// Sends and accepts friend requests 
+app.put("/friends", async (req, res) => {
+
+  if (!req.session.username) {
+      res.status(401).send("Please Sign in First");
+      return;
+  }
+  const username  = req.session.username;
+  const friendName  = req.body;
+  try {
+    // Find the user by username
+    const friend_list = await Friend.findOne({ user: username });
+    // If the user is not found, return a 404 error
+    if (!friend_list) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+
+    // This function will add user to the someones friend list with "state" and will return "ret"
+    async function setFriend(friendName, state, ret){
+      const other_friend = await Friend.findOne({user : friendName});
+
+      // Check if they exist/if they have friend list (older user may not)
+      if (!other_friend.friends) {
         return res.status(404).json({ message: "User not found" });
       }
-      // Add the new friend object to the friends array
-      //var to_add = { }
-      //if (to_add in friend_list.friends){
-      //  return res.status(200).json({ message: "User already added" });
-      //}
 
-
-
-      for (let i = 0; i < friend_list.friends.length ; i++) {
-        let curr = friend_list.friends[i]
-        if(curr["usrname"] === friendName.friendName){ 
-            return res.status(200).json({ message: "User already added" })
-        };
+      // Find the user in the friends list and update 
+      for (let i = 0; i < other_friend.friends.length; i++){
+        if (other_friend.friends[i]["usrname"] === username.toString().trim()){
+          other_friend.friends[i]["state"] = state;
+          await other_friend.save();
+          return res.status(200).json(ret);
+        }
       }
-
-      friend_list.friends.push({usrname: friendName.friendName, state: "temp" } );
-      const other_friend = await Friend.findOne({ user: friendName.friendName});      
-
-      if (!friend_list) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      other_friend.friends.push({usrname: username , state: "temp" } );
-
-
-      // Save the updated user object
-      await friend_list.save();  
-      await other_friend.save();  
-      // Return a success response
-      return res.status(200).json({
-        message: `Added ${friendName}, ${username} as friends`,
-        friend_list,
-      });
-    } catch (error) {
-      // If an error occurs, return a 500 error with the error message
-      return res.status(500).json({ message: error.message });
+      
+      // User was not found in friend list so add them
+      other_friend.friends.push({usrname: username , state: "pending" } );
+      await other_friend.save(); 
+      return res.status(200).json(ret);  
     }
-  });
+
+    // Check if the friend is already added is some capicity
+    for (let i = 0; i < friend_list.friends.length ; i++) {
+      let curr = friend_list.friends[i]
+      if(curr["usrname"] === friendName.friendName){
+        // If state "is sent" we are waiting for a reply
+        if (curr["state"] === "sent"){
+          return res.status(200).json({ message: "Friend request already sent" })
+        }
+        // If state is pending we are accepting someone elses friend request
+        if (curr["state"] === "pending"){
+          curr["state"] = "accepted";
+          await friend_list.save();
+          return await setFriend(friendName.friendName, "accepted", {
+            message: `Accepted ${friendName}, as friend of ${username}`,
+            friend_list
+          });
+          
+        }
+        // If state is rejected change it to sent
+        if (curr["state"] === "rejected"){
+          curr["state"] = "sent"
+          await friend_list.save();
+          return await setFriend(friendName.friendName, "pending", {
+            message: `Sent friend request to ${friendName}, from ${username}`,
+            friend_list
+          });
+          
+        }
+        // If state is accepted do nothing 
+        return res.status(200).json({ message: "User already added" })
+      };
+    }
+
+    // Add friend to user friend list (sent until they confirm it)
+    friend_list.friends.push({usrname: friendName.friendName, state: "sent" } );
+    await friend_list.save();
+    return await setFriend(friendName.friendName, "pending", {
+      message: `Sent friend request to ${friendName}, from ${username}`,
+      friend_list
+    });
+
+  } catch (error) {
+    // If an error occurs, return a 500 error with the error message
+    return res.status(500).json({ message: error.message });
+  }
+});
 
 
 
