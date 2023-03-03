@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {Link} from "react-router-dom";
 import SearchBar from "./SearchBar";
 import { useSelector } from "react-redux";
+import { BsArrowLeftShort } from 'react-icons/bs';
 import '../styles/CommunityPage.css';
 
 function GlobalChat({socket}) {
@@ -61,19 +62,31 @@ export default function CommunityPage({socket}) {
 
   return (
     <div className="community-page-body-container">
-      <Link to="/">Go Back To HomePage</Link>
-      <div>
-        This is the Community Page. 
-        <br></br>
-        TODO: Change this text to tell people what the 2 components below do.
+      <div className="community-page-header-container">
+        <Link to="/" >
+          <BsArrowLeftShort className="arrow-icon-community-page" />
+        </Link>
+        <div className="community-page-header-text-container">
+          Community Page
+        </div>
       </div>
 
       <div className="community-page-component-container">
         <div className="community-page-search-bar">
-          <SearchBar data={allUsersData} filterBy="username"/>
+          <div className="community-page-search-bar-header">
+            Find Friends
+          </div>
+          <div className="community-page-search-bar-component">
+            <SearchBar data={allUsersData} filterBy="username"/>
+          </div>
         </div>
         <div className="community-page-global-chat">
-          <GlobalChat socket={socket}/>
+          <div className="community-page-global-chat-header">
+            Global Chat
+          </div>
+          <div className="community-page-global-chat-component">
+            <GlobalChat socket={socket}/>
+          </div>
         </div>
       </div>
     </div>
