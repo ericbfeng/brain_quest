@@ -1,15 +1,13 @@
-import {React, useState}  from "react";
+import {React}  from "react";
 import {Link} from "react-router-dom";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { connect } from "react-redux";
+import { updateTab } from "../actions/sessionActions";
 import '../styles/HomePage.css';
 
-function HomePage({userInfo}) {  
-
-  const [value, setValue] = useState(0);
-
+function HomePage({userInfo, tabValue, updateTab}) {  
   const GetProfilePrompt = () => {
     return (
       <div className="home-page-prompt-subcontainer">
@@ -83,13 +81,15 @@ function HomePage({userInfo}) {
   }
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    // Update the last tab clicked in the Redux store. This ensures that the user is 
+    // shown the same tab if they return back to the HomePage.
+    updateTab(newValue);
   };
 
     return (
       <Box sx={{ width: '100%' , height: '100%'}}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: '#FFDCC6'}}>
-          <Tabs value={value} onChange={handleChange} 
+          <Tabs value={tabValue} onChange={handleChange} 
           variant="fullWidth"
           centered>
             <Tab label="Profile Page" {...a11yProps(0)} />
@@ -100,11 +100,11 @@ function HomePage({userInfo}) {
           </Tabs>
         </Box>
       <div className="home-page-prompt-container">
-        {value === 0 && GetProfilePrompt()}
-        {value === 1 && GetCommunityPrompt()}
-        {value === 2 && GetSoloPracticePrompt()}
-        {value === 3 && GetTeamPracticePrompt()}
-        {value === 4 && GetCodingPracticePrompt()}
+        {tabValue === 0 && GetProfilePrompt()}
+        {tabValue === 1 && GetCommunityPrompt()}
+        {tabValue === 2 && GetSoloPracticePrompt()}
+        {tabValue === 3 && GetTeamPracticePrompt()}
+        {tabValue === 4 && GetCodingPracticePrompt()}
       </div>
     </Box>
 
@@ -113,8 +113,11 @@ function HomePage({userInfo}) {
 
   const mapStateToProps = state => ({
     userInfo: state.session.userInformation,
+    tabValue: state.session.lastTabClicked,
   });
 
-  const mapActionsToProps = () => ({});
+  const mapActionsToProps = () => ({
+    updateTab
+  });
   
   export default connect(mapStateToProps, mapActionsToProps())(HomePage)

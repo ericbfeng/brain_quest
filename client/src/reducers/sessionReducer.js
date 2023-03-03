@@ -1,4 +1,4 @@
- import { LOGIN_USER, LOGOUT_USER, UPDATE_USER } from "../actions/types";
+ import { LOGIN_USER, LOGOUT_USER, UPDATE_USER, UPDATE_TAB } from "../actions/types";
 
  const initialState = {
     isLoggedIn: false,
@@ -10,10 +10,13 @@
         questionsSolved: []
     }
     */
-    userInformation: {}
+    userInformation: {},
+    // Determines what tab is shown on the home page.
+    lastTabClicked: 0,
  }
 
  export default function sessionReducer(state = initialState, action) {
+    console.log(action.type);
     switch(action.type) {
         case LOGIN_USER:
             return {
@@ -31,6 +34,11 @@
             return {
                 ...state,
                 userInformation: action.payload.userInformation,
+            }
+        case UPDATE_TAB:
+            return {
+                ...state,
+                lastTabClicked: action.payload,
             }
         default:
             return state;
