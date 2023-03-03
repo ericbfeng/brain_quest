@@ -1,4 +1,4 @@
-import { LOGIN_USER, LOGOUT_USER, UPDATE_USER } from "./types";
+import { LOGIN_USER, LOGOUT_USER, UPDATE_USER, UPDATE_TAB } from "./types";
 
 export const loginUser = (response) => dispatch => {
     dispatch({
@@ -18,5 +18,12 @@ export const updateUser = (response) => dispatch => {
     dispatch({
         type: UPDATE_USER,
         payload: response
+    })
+}
+
+export const updateTab = (response) => dispatch => {
+    dispatch({
+        type: UPDATE_TAB,
+        payload: response,
     })
 }
