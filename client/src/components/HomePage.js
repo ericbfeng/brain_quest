@@ -12,7 +12,7 @@ function HomePage({userInfo, tabValue, updateTab}) {
     return (
       <div className="home-page-prompt-subcontainer">
         <div className="home-page-prompt-page-description">
-          There should be a description of what the profile page is, contains, etc..
+          Visit this page to see your profile page to check in on your progress and friends
         </div>
         <div className="home-page-prompt-page-link">
           <Link to={"/profilepage/" + userInfo.username}>Visit Page</Link>
@@ -25,7 +25,7 @@ function HomePage({userInfo, tabValue, updateTab}) {
     return (
       <div className="home-page-prompt-subcontainer">
         <div className="home-page-prompt-page-description">
-        There should be a description of what the community page is, contains, etc..
+        Visit this page to see the community page! Chat with new friends and find users!
         </div>
         <div className="home-page-prompt-page-link">
           <Link to={"/communitypage"}>Visit Page</Link>
@@ -38,7 +38,7 @@ function HomePage({userInfo, tabValue, updateTab}) {
     return (
       <div className="home-page-prompt-subcontainer">
         <div className="home-page-prompt-page-description">
-        There should be a description of what the solo practice page is, contains, etc..
+        Visit this page to see your previous tests and practice solo questions.
         </div>
         <div className="home-page-prompt-page-link">
           <Link to={"/testbankpage"}>Visit Page</Link>
@@ -51,7 +51,7 @@ function HomePage({userInfo, tabValue, updateTab}) {
     return (
       <div className="home-page-prompt-subcontainer">
         <div className="home-page-prompt-page-description">
-          There should be a description of what the team page is, contains, etc..
+        Visit this page to create a team and start practicing together!
         </div>
         <div className="home-page-prompt-page-link">
           <Link to={"/teampage"}>Visit Page</Link>
@@ -64,7 +64,7 @@ function HomePage({userInfo, tabValue, updateTab}) {
     return (
       <div className="home-page-prompt-subcontainer">
         <div className="home-page-prompt-page-description">
-          There should be a description of what the coding page is, contains, etc..
+        Visit this page to sharpen your coding skills! 
         </div>
         <div className="home-page-prompt-page-link">
           <Link to={"/codeeditorpage"}>Visit Page</Link>
