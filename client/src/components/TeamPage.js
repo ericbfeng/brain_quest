@@ -287,9 +287,6 @@ export default function TestPage({socket}) {
   // QUIZ VIEW
   // ---------------------------------------------------
   const GetQuizView = () => {
-    // TODO: Currently we just get a slice. We need to do error
-    // checking (see if the number they gave was too large) and also
-    // RANDOMLY select N questions.
     const questionsToAsk = allQuestions.slice(-numQuizQuestions);
 
     // If we are here, then all the questions have already been asked.
@@ -354,13 +351,45 @@ export default function TestPage({socket}) {
       return (numCorrect * 1) - (numIncorrect * 0.5);
     }
 
+    const getUserRecords = () => {
+      let userRecordsJson = {};
+      for(let i = 0; i < teamMembers.length; i++){
+        const username = teamMembers[i].username;
+        const score = calculateScore(answerAttempts.filter(attempt => attempt.username === username && attempt.correct).length, answerAttempts.filter(attempt => attempt.username === username).length);
+        userRecordsJson[username] = score;
+      }
+      return userRecordsJson;
+    }
+
     const renderUserRecords = () => {
+      const userRecords = getUserRecords();
+      
       return teamMembers.map(({username}, index) => (
         <div key={index}>
-          {username}: 
-            {calculateScore(answerAttempts.filter(attempt => attempt.username === username && attempt.correct).length, answerAttempts.filter(attempt => attempt.username === username).length)}
+          {username}: {userRecords[username]}
         </div>
       ))
+    }
+
+    const getWinners = () => {
+      const userRecords = getUserRecords();
+      const winners = [];
+      let maxScore = Number.MIN_VALUE;
+
+      for(let i = 0; i < teamMembers.length; i++){
+        const username = teamMembers[i].username;
+        if(userRecords[username] > maxScore){
+          maxScore = userRecords[username];
+        }
+      }
+
+      for(let i = 0; i < teamMembers.length; i++){
+        const username = teamMembers[i].username;
+        if(userRecords[username] === maxScore){
+          winners.push(username);
+        }
+      }
+      return winners;
     }
 
     return <div className="scores-view-text">
@@ -375,7 +404,7 @@ export default function TestPage({socket}) {
       <br></br>
       {renderUserRecords()}
       <br></br>
-      TODO: Add API to record who won this competition. Also could sort the team by scores.
+      The winner(s): {getWinners().toString()}
     </div>
   }
 
