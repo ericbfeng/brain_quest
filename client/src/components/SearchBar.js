@@ -13,7 +13,6 @@ export default function SearchBar({data, filterBy, page}) {
 
     function getResults() {
         //console.log(data);
-        console.log('hi');
         if (searchQuery.length !== 0) {
             const filter = data.filter((value) => {
                 return value[filterBy].toLowerCase().includes(searchQuery.toLowerCase());

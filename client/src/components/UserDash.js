@@ -2,7 +2,8 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
 import Avatar from '@mui/material/Avatar';
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
+import { Typography } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,12 +16,16 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import LinearProgress from '@mui/material/LinearProgress';
+import { useParams } from "react-router-dom";
 
 function Selector(){
-    const [test, setTest] = React.useState('select test');
+    const [test, setTest] = React.useState('ACT');
+    
+    
     const handleChange = (event) => {
         setTest(event.target.value);
     };
+
     return (  
 
 
@@ -84,6 +89,13 @@ function TestDisplay(){
 export default function UserDash() {  
     const usrName  =  "Username";
     const usrImg = null;
+    const { pageUsername } = useParams();
+
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     return(
         <div>
         <Box sx = {{ 
@@ -94,10 +106,12 @@ export default function UserDash() {
             elevation={5}>
             <Grid container spacing={2}>
                 <Grid xs={2}>
-                <Avatar>{usrName[0]}</Avatar>
+                <Avatar>{pageUsername[0].toUpperCase()}</Avatar>
                 </Grid>
                 <Grid xs={10}>
-                    {usrName}'s Dashboard:
+                    <Typography>
+                    {capitalizeFirstLetter(pageUsername)}'s Dashboard:
+                    </Typography> 
                 </Grid>
             </Grid>
             <Selector/>
