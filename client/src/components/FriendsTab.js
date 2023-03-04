@@ -17,7 +17,7 @@ import { Button } from '@mui/material';
 
 export default function FriendsTab({tablabel, renderState}){
 
-    
+  const placeholder_text = "Add friends to chat with them here!";
   let [friends, setFriends] = useState([]);
   const [allUsersData, setAllUsersData] = useState([]);
 
@@ -112,7 +112,6 @@ export default function FriendsTab({tablabel, renderState}){
         })
         .then((data) => {
           setFriends(data)
-
         })
         .catch((error) => {
           console.error(error);
@@ -163,7 +162,8 @@ export default function FriendsTab({tablabel, renderState}){
           <Card sx={{ backgroundColor: "white" }}>
             <AddSearchBar></AddSearchBar>
             <List dense={dense}>
-              {generate(friends)}
+              {friends.length > 0 ? generate(friends): placeholder_text}
+              
             </List>
           </Card>
         </CardContent>
