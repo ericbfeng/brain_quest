@@ -6,6 +6,8 @@ import { allQuestions } from '../question_bank/questions';
 import NumericInput from 'react-numeric-input';
 import '../styles/TeamPage.css';
 
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+
 function TeamChat({socket, team}) {
   const [teamChat, setTeamChat] = useState([]);
   const [messageEntered, setMessageEntered] = useState('');
@@ -329,7 +331,9 @@ export default function TestPage({socket}) {
             {"Question #" + (currentQuestionIndex + 1)}
           </div>
           <div className="quiz-view-question-text">
+            <MathJax hideUntilTypeset={"first"}>
             {questionsToAsk[currentQuestionIndex].question}
+            </MathJax>
           </div>
         </div>
         <div className="quiz-view-answer-container">
