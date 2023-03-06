@@ -1,47 +1,25 @@
-import * as React from 'react';
+
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { CardContent } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Unstable_Grid2';
-import { height } from '@mui/system';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import {useNavigate } from 'react-router-dom';
+import { useParams } from "react-router-dom";
+import { satQuestions, actQuestions, apQuestions, codingQuestions } from '../question_bank/questions';
 
 
 
-const Tests = [ 
 
-    {      
-        "test":  "SAT",
-        "subject": "Science", 
-        "id": 0
-    },
-
-    {      
-        "test":  "SAT",
-        "subject": "Math",
-        "id": 1
-    },
-
-    {      
-        "test":  "ACT",
-        "subject": "Math",
-        "id": 2
-    }, 
-
-
-]
-
-
-function generate(element) {
-    return Tests.map((value) => {
+function generate(element, quizes) {
+    return quizes.map((value) => {
         return (<React.Fragment key={value.id}> {React.cloneElement(element, value)} </React.Fragment> 
         );}
     );
 }
-
 
 
 
@@ -80,6 +58,56 @@ function IndividualTest(props){
     )
 }
 export default function PastTest(){
+    const { pageUsername } = useParams();
+    const [ p_quizes, setQuizes] = React.useState([]);
+
+    function checkTest(questionid, testSet){
+        for(let i = 0; i < testSet.length; i++){
+            if(testSet[i].questionId === questionid){
+                return testSet[i].subType;
+            }
+        }
+    }
+
+    useEffect(() => {
+          fetch(`/userByUsername/${pageUsername}`)
+          .then(res=> res.json())
+          .then((data) =>{
+                let quizes = []  
+                let item = data[0];
+                    for(let i = 0; i < item.record.length; i++){
+                        let curr = item.record[i];
+                        let to_add =  {      
+                            "test":  null,
+                            "subject": null,
+                            "id": curr
+                        }
+                        if(curr < 1000){
+                            to_add.test = "SAT";
+                            to_add.subject = checkTest(curr, satQuestions);
+                            //SAT questions
+                        }
+                        else if(curr < 2000){
+                            to_add.test = "ACT";
+                            to_add.subject = checkTest(curr, actQuestions);
+                            // actQuestions
+                        }
+                        else if(curr < 3000){
+                            to_add.test = "AP";
+                            to_add.subject = checkTest(curr, apQuestions);
+                            // apQuestions
+                        }else{ 
+                            to_add.test = "CODING";
+                            to_add.subject = checkTest(curr, codingQuestions);
+                            // codingQuestions
+                        }
+                        quizes.push(to_add);
+                    }
+                setQuizes(quizes);
+                
+        })
+          .then(error => console.error(error));
+      }, []);
 
 
     return( 
@@ -89,7 +117,11 @@ export default function PastTest(){
             Past Tests:
         </Typography>
         <Stack spacing={2}>
-            {generate(<IndividualTest/>)}
+            {p_quizes.length === 0? 
+            <Typography>
+                Practice quizes to see previous tests here
+            </Typography>
+            :generate(<IndividualTest/>, p_quizes)}
         </Stack>
         </CardContent>
         </Card>
