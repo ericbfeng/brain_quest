@@ -14,17 +14,15 @@ import UserDash from "./UserDash";
 import Stack from '@mui/material/Stack';
 import FriendsTab from "./FriendsTab";
 import PastTest from "./PastTests";
-import { tabClasses } from "@mui/material";
+import { Button, tabClasses } from "@mui/material";
 import {useNavigate } from 'react-router-dom';
 import ReccomendFriends from '../Utils/FriendRecommendation'
 import '../styles/CommunityPage.css';
-import SearchBar from "./SearchBar";
 
 
 
 
-
-function Userinfo(){
+function Userinfo(props){
 
   useEffect(() => {
     // Update the document title using the browser API
@@ -53,8 +51,6 @@ function Userinfo(){
 
   });
 
-  
-
 
   return(
 
@@ -74,7 +70,7 @@ function Userinfo(){
           <FriendsTab tablabel={"Pending Invites"} renderState={"pending"}/>
         </Grid>
         <Grid xs={4} sx={{ height: "100%" }}>
-          <FriendsTab tablabel={"Add New Friends"} />
+          <FriendsTab user={props.user} tablabel={"Add New Friends"} renderState={true}/>
         </Grid>
       </Grid>
     </Stack>
@@ -240,7 +236,7 @@ function ProfilePage({userInfo, updateUser}) {
           </div> */}
         </div>
       
-      <Userinfo/>
+      <Userinfo user={userInfo.username}/>
       
       </Stack>
     );
