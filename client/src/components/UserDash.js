@@ -52,7 +52,9 @@ function TestDisplay(){
     const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
       setValue(newValue);
-    };
+    }; 
+
+
 
     return(
     <Box sx={{ maxWidth: { xs: 320, sm: 480 }, bgcolor: 'background.paper' }}>
@@ -65,20 +67,20 @@ function TestDisplay(){
       >
         <Tab label={<Stack spacing={2}>
                 <CalculateIcon/>
-                <LinearProgress  value = {10} variant="determinate" />
+                <LinearProgress  value = {0} variant="determinate" />
                 </Stack>} />
         <Tab label={
             <Stack spacing={2}>
             <AutoStoriesIcon/> 
-            <LinearProgress value = {40} variant="determinate" />
+            <LinearProgress value = {0} variant="determinate" />
             </Stack>
         }/>
         <Tab label={<Stack spacing={2}>
-        <MenuBookIcon/> <LinearProgress  value = {70}  variant="determinate"  />
+        <MenuBookIcon/> <LinearProgress  value = {0}  variant="determinate"  />
         </Stack>} />
         <Tab label={
         <Stack spacing={2}>
-            <LightbulbIcon/> <LinearProgress  value = {10} variant="determinate" /> 
+            <LightbulbIcon/> <LinearProgress  value = {0} variant="determinate" /> 
         </Stack> } 
         />
       </Tabs>

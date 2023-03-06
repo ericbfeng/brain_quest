@@ -4,6 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { connect } from "react-redux";
+import { Button } from '@mui/material';
 import { updateTab } from "../actions/sessionActions";
 import '../styles/HomePage.css';
 
@@ -15,7 +16,11 @@ function HomePage({userInfo, tabValue, updateTab}) {
           Visit this page to see your profile page to check in on your progress and friends
         </div>
         <div className="home-page-prompt-page-link">
-          <Link to={"/profilepage/" + userInfo.username}>Visit Page</Link>
+        <Link to={"/profilepage/" + userInfo.username}>V
+        <Button variant="contained">
+        Visit Page
+        </Button>
+        </Link>
         </div>
       </div>
     )
@@ -28,7 +33,10 @@ function HomePage({userInfo, tabValue, updateTab}) {
         Visit this page to see the community page! Chat with new friends and find users!
         </div>
         <div className="home-page-prompt-page-link">
-          <Link to={"/communitypage"}>Visit Page</Link>
+          <Link to={"/communitypage"}>
+            Visit Page
+            
+          </Link>
         </div>
       </div>
     )
