@@ -15,7 +15,9 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SearchBar from "./SearchBar";
 import { Button } from '@mui/material';
 
-export default function FriendsTab({tablabel, renderState}){
+import ReccomendFriends from '../Utils/FriendRecommendation'
+
+export default function FriendsTab({tablabel, renderState, user}){
 
   const placeholder_text = "Add friends to chat with them here!";
   let [friends, setFriends] = useState([]);
@@ -32,7 +34,12 @@ export default function FriendsTab({tablabel, renderState}){
 
   function AddSearchBar(){
     if (tablabel === "Add New Friends"){
-      return <SearchBar data={allUsersData} filterBy="username" page="profile"/>
+      return (
+        <>
+        <SearchBar data={allUsersData} filterBy="username" page="profile"/>
+        <ListItemText primary="Recommended Friends"></ListItemText>
+        </>
+      )
     } else{
       return null
     }
@@ -64,7 +71,8 @@ export default function FriendsTab({tablabel, renderState}){
 
   function friendUI(friend){
     if (friend.state === renderState){
-      return (<ListItem key={friend._id.toString()}
+      return (
+            <ListItem key={friend._id.toString()}
             secondaryAction={
                 <IconButton onClick = {handleChange} edge="end" aria-label="chat">
                     { tablabel ===  "Friends" ? <ChatIcon />: <PersonAddIcon/>} 
@@ -96,7 +104,14 @@ export default function FriendsTab({tablabel, renderState}){
 
   useEffect(() => {
     // Update the document title using the browser API
-            
+      if (renderState === true){  
+        const fetchData = async () => {
+          const f = await ReccomendFriends(3, user);
+          setFriends(f.map((x, indx) => { return {"usrname": x, "state": true, "_id": indx} }));
+        }
+        fetchData();
+        return;
+      }
       fetch(`/getfriends`, {
         method: "GET",
         headers: {
@@ -111,12 +126,12 @@ export default function FriendsTab({tablabel, renderState}){
           }
         })
         .then((data) => {
-          setFriends(data)
+          setFriends(data);
         })
         .catch((error) => {
           console.error(error);
         });
-
+      
   }, [] );
 
 

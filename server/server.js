@@ -209,15 +209,21 @@ app.get("/getfriends/:user", async function(request, response){
   }
 });
 
-app.get("/userById/:id", async function(request, response){
-  let id = request.params.id
+app.get("/userByUsername/:username", async function(request, response){
+  let username = request.params.username;
+  console.log("Get User By Id Called ID: ", username);
   try{
-    let user = await User.findById(id).exec();
+    console.log(0);
+    let user = await User.find({username: username})
+    console.log(1);
     if (!user){
+      console.log(2);
       response.status(404).send($`User ${id} not found in database`);
     }
+    console.log(3);
     response.status(200).send(user);
   } catch (err){
+    console.log(4);
     response.status(400).send(err.message);
   }
 });
