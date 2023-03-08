@@ -146,8 +146,8 @@ function LoginOrRegister({loginUser}) {
         }
       </div>
       <div className="login-register-buttons">
-        <button className="login-register-button" onClick={() => handleClick("REGISTER")}>Register</button>
-        <button className="login-register-button" onClick={() => handleClick("LOGIN")}>Login</button>
+        <button className={"login-register-button" + (userIsLoggingIn ? "": " border-button")} onClick={() => handleClick("REGISTER")}>{userIsLoggingIn ? "Go To Registration Screen": "Register Account!"}</button>
+        <button className={"login-register-button" + (userIsLoggingIn ? " border-button": "")} onClick={() => handleClick("LOGIN")}>{userIsLoggingIn ? "Login With Account!": "Go To Login Screen"}</button>
       </div>
     </div>
   )
