@@ -62,7 +62,7 @@ export default async function ReccomendFriends(numOfRecomendations, user, depthF
     let currentFriends = await fetchUser();
     for (let i = 0; i <  currentFriends.length; i++){
       let cFriend = currentFriends[i]
-      if (cFriend.state === "accepted" && cFriend.usrname in count){
+      if ((cFriend.state === "accepted" || cFriend.state === "sent") && cFriend.usrname in count){
         delete count[cFriend.usrname];
       }
     }
