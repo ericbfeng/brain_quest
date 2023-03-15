@@ -1,6 +1,8 @@
 import React, {useState} from "react";
+import Box from '@mui/material/Box';
 import '../styles/SearchBar.css';
 import {Link} from "react-router-dom";
+import { Typography } from '@mui/material';
 import { Button } from "@mui/material";
 
 export default function SearchBar({data, filterBy, page}) {
@@ -24,8 +26,8 @@ export default function SearchBar({data, filterBy, page}) {
     }
 
     // When a user is clicked on profile page add them as a friend
-    async function addFriend(event){
-        const friendName = event.target.innerText;
+    async function addFriend(event, setAddButton){
+        const friendName = event.target.value;
         console.log(friendName);
 
         // Call API
@@ -38,6 +40,7 @@ export default function SearchBar({data, filterBy, page}) {
           });
       
           const responseData = await response.json();
+          setAddButton("Sent");
           console.log(responseData);
         } catch(e) {
           console.error(e);
@@ -46,9 +49,15 @@ export default function SearchBar({data, filterBy, page}) {
 
     // If we are using the search bar for the profile page render it slightly differently
     function UserLink(props){
+        const [addbutton, setAddbutton] = useState("Add");
         if (props.page === "profile"){
             return (
-                <button key={props.value._id} value={props.value[filterBy]} onClick={addFriend}> {props.value[filterBy]} </button>
+                <>
+                <Box ml={2.5}>
+                    <Typography align="left">{props.value[filterBy]}</Typography>
+                </Box>
+                <Button key={props.value._id} value={props.value[filterBy]} onClick={(e) => addFriend(e, setAddbutton)}> {addbutton} </Button>
+                </>
             );
         }
 

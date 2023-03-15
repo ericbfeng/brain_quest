@@ -14,13 +14,15 @@ import ChatIcon from '@mui/icons-material/Chat';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SearchBar from "./SearchBar";
 import { Button } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 
 import ReccomendFriends from '../Utils/FriendRecommendation'
 
-export default function FriendsTab({tablabel, renderState, user}){
+export default function FriendsTab({tablabel, renderState, user, setFriends, friends}){
 
   const placeholder_text = "Add friends to chat with them here!";
-  let [friends, setFriends] = useState([]);
+  let [recommendedFriends, setRecommendedFriends] = useState([]);
+  
   const [allUsersData, setAllUsersData] = useState([]);
 
   useEffect(() => {
@@ -45,6 +47,28 @@ export default function FriendsTab({tablabel, renderState, user}){
     }
   }
 
+  async function updateFriends(){
+    await fetch(`/getfriends`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to retrieve friends");
+        }
+      })
+      .then((data) => {
+        setFriends(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   async function removeFriend(e){
     const friend = e.target.value.toString();
     console.log("remove friend: ", friend);
@@ -63,14 +87,35 @@ export default function FriendsTab({tablabel, renderState, user}){
     })
     .then((data) => {
       console.log(data);
+      updateFriends();
     })
     .catch((error) => {
       console.error(error);
     })
   }
 
+  async function addFriend(friendName){
+
+    // Call API
+    const data = { friendName };
+    try {
+      const response = await fetch("/friends", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+  
+      const responseData = await response.json();
+      setFriends(responseData.friend_list.friends);
+
+    } catch(e) {
+      console.error(e);
+    }
+  }
+
   function friendUI(friend){
     if (friend.state === renderState){
+      console.log(friend.usrname);
       return (
             <ListItem key={friend._id.toString()}
             secondaryAction={
@@ -89,6 +134,7 @@ export default function FriendsTab({tablabel, renderState, user}){
                   secondary={secondary ? 'Secondary text' : null}
               />
               <Button onClick={removeFriend} value={friend.usrname}> X </Button>
+              {renderState === "pending" ? <Button onClick={() => addFriend(friend.usrname)}><CheckIcon></CheckIcon></Button> : <></>}
             </ListItem>
   
           );
@@ -107,31 +153,11 @@ export default function FriendsTab({tablabel, renderState, user}){
       if (renderState === true){  
         const fetchData = async () => {
           const f = await ReccomendFriends(3, user);
-          setFriends(f.map((x, indx) => { return {"usrname": x, "state": true, "_id": indx} }));
+          setRecommendedFriends(f.map((x, indx) => { return {"usrname": x, "state": true, "_id": indx} }));
         }
         fetchData();
         return;
       }
-      fetch(`/getfriends`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Failed to retrieve friends");
-          }
-        })
-        .then((data) => {
-          setFriends(data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      
   }, [] );
 
 
@@ -178,7 +204,6 @@ export default function FriendsTab({tablabel, renderState, user}){
             <AddSearchBar></AddSearchBar>
             <List dense={dense}>
               {friends.length > 0 ? generate(friends): placeholder_text}
-              
             </List>
           </Card>
         </CardContent>
