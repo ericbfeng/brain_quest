@@ -24,7 +24,6 @@ import '../styles/CommunityPage.css';
 
 function FriendInfo(props){
   let [friends, setFriends] = useState([]);
-  console.log("FRIEND INFO")
 
   useEffect(() => {
     // Update the document title using the browser API
@@ -42,7 +41,6 @@ function FriendInfo(props){
         }
       })
       .then((data) => {
-        console.log("DATA: ", data);
         setFriends(data);
       })
       .catch((error) => {

@@ -71,7 +71,6 @@ export default function FriendsTab({tablabel, renderState, user, setFriends, fri
 
   async function removeFriend(e){
     const friend = e.target.value.toString();
-    console.log("remove friend: ", friend);
     await fetch ('/unfriend', {
       method: "PUT",
       headers: {
@@ -107,6 +106,10 @@ export default function FriendsTab({tablabel, renderState, user, setFriends, fri
   
       const responseData = await response.json();
       setFriends(responseData.friend_list.friends);
+      if (tablabel === "Add New Friends"){
+        const f = await ReccomendFriends(3, user);
+        setRecommendedFriends(f.map((x, indx) => { return {"usrname": x, "state": true, "_id": indx} }));
+      }
 
     } catch(e) {
       console.error(e);
@@ -115,7 +118,6 @@ export default function FriendsTab({tablabel, renderState, user, setFriends, fri
 
   function friendUI(friend){
     if (friend.state === renderState){
-      console.log(friend.usrname);
       return (
             <ListItem key={friend._id.toString()}
             secondaryAction={
@@ -133,7 +135,7 @@ export default function FriendsTab({tablabel, renderState, user, setFriends, fri
                   primary={friend.usrname}
                   secondary={secondary ? 'Secondary text' : null}
               />
-              <Button onClick={removeFriend} value={friend.usrname}> X </Button>
+              {tablabel === "Add New Friends" ? <Button onClick={() => addFriend(friend.usrname)}>Add</Button> : <Button onClick={removeFriend} value={friend.usrname}> X </Button>}
               {renderState === "pending" ? <Button onClick={() => addFriend(friend.usrname)}><CheckIcon></CheckIcon></Button> : <></>}
             </ListItem>
   
@@ -167,32 +169,11 @@ export default function FriendsTab({tablabel, renderState, user, setFriends, fri
 
 
     const handleChange = async(event) => {
-      if(tablabel ===  "Friends"){
-        return
-      }
-      var friendName = "ww";
-      console.log("Quick Add");
-      const addFriend =  async (friendName) => {
-        const url = `/quickadd`;
-        const data = { friendName };
-      
-        try {
-          const response = await fetch(url, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          });
-      
-          const responseData = await response.json();
-          console.log(responseData);
-        } catch(error) {
-          
-        }
-      };
-      
-      addFriend(friendName);
-
+      console.log("Chat friend from here not impemented yet");
     };
+
+    let friendList = null;
+    tablabel === "Add New Friends" ? friendList = recommendedFriends: friendList = friends;
     
     return(<Card  sx={{ backgroundColor: "AntiqueWhite" }} > 
         <CardContent >
@@ -203,7 +184,7 @@ export default function FriendsTab({tablabel, renderState, user, setFriends, fri
           <Card sx={{ backgroundColor: "white" }}>
             <AddSearchBar></AddSearchBar>
             <List dense={dense}>
-              {friends.length > 0 ? generate(friends): placeholder_text}
+              {friends.length > 0 ? generate(friendList): placeholder_text}
             </List>
           </Card>
         </CardContent>
