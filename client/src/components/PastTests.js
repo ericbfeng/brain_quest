@@ -38,8 +38,7 @@ function IndividualTest(props){
 
     return(
 
-        <Card sx={{ backgroundColor: "AntiqueWhite", height: 40, width: "100%"}}>
-            
+        <Card sx={{ backgroundColor: "AntiqueWhite", height: 40, width: "100%"}}>         
             <Grid container spacing={2}>
                 <Grid xs={3}>
                     <Avatar> T </Avatar>
@@ -61,6 +60,14 @@ export default function PastTest(){
     const { pageUsername } = useParams();
     const [ p_quizes, setQuizes] = React.useState([]);
 
+
+
+    /**
+     * 
+     * @param {*} questionid takes a question ID that the user has solved
+     * @param {*} testSet the array of questions that the question could be associated with
+     * @returns the subject related wit the question.
+     */
     function checkTest(questionid, testSet){
         for(let i = 0; i < testSet.length; i++){
             if(testSet[i].questionId === questionid){
@@ -68,7 +75,9 @@ export default function PastTest(){
             }
         }
     }
+    
 
+    //on the loading of this component, makes the fetch call for the specific user.
     useEffect(() => {
           fetch(`/userByUsername/${pageUsername}`)
           .then(res=> res.json())
@@ -82,6 +91,7 @@ export default function PastTest(){
                             "subject": null,
                             "id": curr
                         }
+                        //As specified by the testbank, the quizes are stored in this way:
                         if(curr < 1000){
                             to_add.test = "SAT";
                             to_add.subject = checkTest(curr, satQuestions);

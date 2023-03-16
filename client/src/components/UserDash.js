@@ -54,7 +54,21 @@ function TestDisplay(){
       setValue(newValue);
     }; 
 
+    /* TODO: Upon loading of the page, want to get user information and and 
+    do calculations to get the progress on each test. 
+    
+    useEffect(() => {
+        fetch(`/userByUsername/${pageUsername}`)
+        .then(res=> res.json())
+        .then((data) =>{
+            let questions = data[0].record;
+            //for(let i = 0; i < questions.length; i++){
+            //}
+        }).then(error => console.error(error));
+        }, []);
 
+
+    */
 
     return(
     <Box sx={{ maxWidth: { xs: 320, sm: 480 }, bgcolor: 'background.paper' }}>
@@ -63,7 +77,6 @@ function TestDisplay(){
         onChange={handleChange}
         variant="scrollable"
         scrollButtons="auto"
-        aria-label="scrollable auto tabs example"
       >
         <Tab label={<Stack spacing={2}>
                 <CalculateIcon/>

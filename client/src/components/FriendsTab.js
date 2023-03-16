@@ -34,12 +34,7 @@ export default function FriendsTab({tablabel, renderState, user}){
 
   function AddSearchBar(){
     if (tablabel === "Add New Friends"){
-      return (
-        <>
-        <SearchBar data={allUsersData} filterBy="username" page="profile"/>
-        <ListItemText primary="Recommended Friends"></ListItemText>
-        </>
-      )
+      return <SearchBar data={allUsersData} filterBy="username" page="profile"/>
     } else{
       return null
     }
@@ -81,7 +76,7 @@ export default function FriendsTab({tablabel, renderState, user}){
             >
               <ListItemAvatar>
                   <Avatar>
-                      U
+                      {friend.usrname[0]}
                   </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -104,14 +99,7 @@ export default function FriendsTab({tablabel, renderState, user}){
 
   useEffect(() => {
     // Update the document title using the browser API
-      if (renderState === true){  
-        const fetchData = async () => {
-          const f = await ReccomendFriends(3, user);
-          setFriends(f.map((x, indx) => { return {"usrname": x, "state": true, "_id": indx} }));
-        }
-        fetchData();
-        return;
-      }
+            
       fetch(`/getfriends`, {
         method: "GET",
         headers: {
@@ -126,14 +114,13 @@ export default function FriendsTab({tablabel, renderState, user}){
           }
         })
         .then((data) => {
-          setFriends(data);
+          setFriends(data)
         })
         .catch((error) => {
           console.error(error);
         });
-      
-  }, [] );
 
+  }, [] );
 
     
     const [dense, setDense] = React.useState(false);

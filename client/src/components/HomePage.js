@@ -16,7 +16,7 @@ function HomePage({userInfo, tabValue, updateTab}) {
           Visit this page to see your profile page to check in on your progress and friends
         </div>
         <div className="home-page-prompt-page-link">
-        <Link to={"/profilepage/" + userInfo.username}>V
+        <Link to={"/profilepage/" + userInfo.username}>
         <Button variant="contained">
         Visit Page
         </Button>
@@ -34,8 +34,9 @@ function HomePage({userInfo, tabValue, updateTab}) {
         </div>
         <div className="home-page-prompt-page-link">
           <Link to={"/communitypage"}>
-            Visit Page
-            
+          <Button variant="contained">
+        Visit Page
+        </Button>
           </Link>
         </div>
       </div>
@@ -49,7 +50,9 @@ function HomePage({userInfo, tabValue, updateTab}) {
         Visit this page to see your previous tests and practice solo questions.
         </div>
         <div className="home-page-prompt-page-link">
-          <Link to={"/testbankpage"}>Visit Page</Link>
+          <Link to={"/testbankpage"}>        <Button variant="contained">
+        Visit Page
+        </Button></Link>
         </div>
       </div>
     )
@@ -62,7 +65,9 @@ function HomePage({userInfo, tabValue, updateTab}) {
         Visit this page to create a team and start practicing together!
         </div>
         <div className="home-page-prompt-page-link">
-          <Link to={"/teampage"}>Visit Page</Link>
+          <Link to={"/teampage"}>        <Button variant="contained">
+        Visit Page
+        </Button></Link>
         </div>
       </div>
     )
@@ -75,7 +80,9 @@ function HomePage({userInfo, tabValue, updateTab}) {
         Visit this page to sharpen your coding skills! 
         </div>
         <div className="home-page-prompt-page-link">
-          <Link to={"/codeeditorpage"}>Visit Page</Link>
+          <Link to={"/codeeditorpage"}>        <Button variant="contained">
+        Visit Page
+        </Button></Link>
         </div>
       </div>
     )

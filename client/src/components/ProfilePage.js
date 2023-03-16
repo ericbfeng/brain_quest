@@ -23,37 +23,8 @@ import '../styles/CommunityPage.css';
 
 
 function Userinfo(props){
-
-  useEffect(() => {
-    // Update the document title using the browser API
-            
-      fetch(`/getfriends`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Failed to retrieve friends");
-          }
-        })
-        .then((data) => {
-          console.log(data);
-          // Do something with the response data
-        })
-        .catch((error) => {
-          console.error(error);
-          // Handle the error
-        });
-
-  });
-
-
+  //Main Profile code
   return(
-
     <Box sx={{ flexGrow: 1 }}>
     <Stack spacing={2}>
       <Grid container spacing={2}>
@@ -203,8 +174,11 @@ function ProfilePage({userInfo, updateUser}) {
 
     }
 
+
+    // Commented out code above depricated, will make it a popup/seperate window that can be accessed in logo.
+
     return (
-      <Stack spacing={2}>
+     <Stack spacing={2}>
         <div className="profile-header"> 
           <Link className="arrow-icon-container" to="/" >
             <BsArrowLeftShort className="arrow-icon" />
