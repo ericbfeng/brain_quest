@@ -14,13 +14,15 @@ import ChatIcon from '@mui/icons-material/Chat';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SearchBar from "./SearchBar";
 import { Button } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 
 import ReccomendFriends from '../Utils/FriendRecommendation'
 
-export default function FriendsTab({tablabel, renderState, user}){
+export default function FriendsTab({tablabel, renderState, user, setFriends, friends}){
 
   const placeholder_text = "Add friends to chat with them here!";
-  let [friends, setFriends] = useState([]);
+  let [recommendedFriends, setRecommendedFriends] = useState([]);
+  
   const [allUsersData, setAllUsersData] = useState([]);
 
   useEffect(() => {
@@ -40,9 +42,30 @@ export default function FriendsTab({tablabel, renderState, user}){
     }
   }
 
+  async function updateFriends(){
+    await fetch(`/getfriends`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to retrieve friends");
+        }
+      })
+      .then((data) => {
+        setFriends(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   async function removeFriend(e){
     const friend = e.target.value.toString();
-    console.log("remove friend: ", friend);
     await fetch ('/unfriend', {
       method: "PUT",
       headers: {
@@ -58,10 +81,34 @@ export default function FriendsTab({tablabel, renderState, user}){
     })
     .then((data) => {
       console.log(data);
+      updateFriends();
     })
     .catch((error) => {
       console.error(error);
     })
+  }
+
+  async function addFriend(friendName){
+
+    // Call API
+    const data = { friendName };
+    try {
+      const response = await fetch("/friends", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+  
+      const responseData = await response.json();
+      setFriends(responseData.friend_list.friends);
+      if (tablabel === "Add New Friends"){
+        const f = await ReccomendFriends(3, user);
+        setRecommendedFriends(f.map((x, indx) => { return {"usrname": x, "state": true, "_id": indx} }));
+      }
+
+    } catch(e) {
+      console.error(e);
+    }
   }
 
   function friendUI(friend){
@@ -83,7 +130,8 @@ export default function FriendsTab({tablabel, renderState, user}){
                   primary={friend.usrname}
                   secondary={secondary ? 'Secondary text' : null}
               />
-              <Button onClick={removeFriend} value={friend.usrname}> X </Button>
+              {tablabel === "Add New Friends" ? <Button onClick={() => addFriend(friend.usrname)}>Add</Button> : <Button onClick={removeFriend} value={friend.usrname}> X </Button>}
+              {renderState === "pending" ? <Button onClick={() => addFriend(friend.usrname)}><CheckIcon></CheckIcon></Button> : <></>}
             </ListItem>
   
           );
@@ -99,27 +147,14 @@ export default function FriendsTab({tablabel, renderState, user}){
 
   useEffect(() => {
     // Update the document title using the browser API
-            
-      fetch(`/getfriends`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Failed to retrieve friends");
-          }
-        })
-        .then((data) => {
-          setFriends(data)
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
+      if (renderState === true){  
+        const fetchData = async () => {
+          const f = await ReccomendFriends(3, user);
+          setRecommendedFriends(f.map((x, indx) => { return {"usrname": x, "state": true, "_id": indx} }));
+        }
+        fetchData();
+        return;
+      }
   }, [] );
 
     
@@ -128,32 +163,11 @@ export default function FriendsTab({tablabel, renderState, user}){
 
 
     const handleChange = async(event) => {
-      if(tablabel ===  "Friends"){
-        return
-      }
-      var friendName = "ww";
-      console.log("Quick Add");
-      const addFriend =  async (friendName) => {
-        const url = `/quickadd`;
-        const data = { friendName };
-      
-        try {
-          const response = await fetch(url, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-          });
-      
-          const responseData = await response.json();
-          console.log(responseData);
-        } catch(error) {
-          
-        }
-      };
-      
-      addFriend(friendName);
-
+      console.log("Chat friend from here not impemented yet");
     };
+
+    let friendList = null;
+    tablabel === "Add New Friends" ? friendList = recommendedFriends: friendList = friends;
     
     return(<Card  sx={{ backgroundColor: "AntiqueWhite" }} > 
         <CardContent >
@@ -164,8 +178,7 @@ export default function FriendsTab({tablabel, renderState, user}){
           <Card sx={{ backgroundColor: "white" }}>
             <AddSearchBar></AddSearchBar>
             <List dense={dense}>
-              {friends.length > 0 ? generate(friends): placeholder_text}
-              
+              {friends.length > 0 ? generate(friendList): placeholder_text}
             </List>
           </Card>
         </CardContent>

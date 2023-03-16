@@ -228,53 +228,6 @@ app.get("/userByUsername/:username", async function(request, response){
   }
 });
 
-//Quick add friend (used for testing)
-// app.put("/quickadd",  async (req, res) => {
-//   console.log("quickadd");
-//   if (!req.session.username) {
-//     res.status(401).send("Please Sign in First");
-//     return;
-//   }
-//   const username  = req.session.username;
-//   const friendName  = req.body;
-//   try {
-//   // Find the user by username
-//   const user = await Friend.findOne({ user: username });
-//   if (!user) {
-//     return res.status(404).json({ message: "User not found" });
-//   }
-//   const friend = await Friend.findOne({ user: friendName.friendName });
-//   if (!friend) {
-//     return res.status(404).json({ message: "User not found" });
-//   }
-
-//   let there = false;
-//   for (let i = 0; i < user.friends.length; i++){
-//     if (user.friends[i]["usrname"] === friendName.friendName){
-//       user.friends[i]["state"] = "accepted";
-//       there = true;
-//     }
-//   }
-//   if (!there) user.friends.push({usrname: friendName.friendName, state: "accepted" } );
-
-//   there = false
-//   for (let i = 0; i < friend.friends.length; i++){
-//     if (friend.friends[i]["usrname"] === user){
-//       friend.friends[i]["state"] = "accepted";
-//     }
-//     there = true;
-//   }
-//   if (!there) friend.friends.push({usrname: user, state: "accepted" } );
-
-//   await user.save();
-//   await friend.save();
-//   return res.status(200).json({ message: "Quick add was a success" });
-
-// } catch (e){
-//   return res.status(500).json({ message: e.message });
-// }
-
-// });
 
 // Unfriends a user by removing both users from each other friends list 
 app.put("/unfriend", async (req, res) => {    

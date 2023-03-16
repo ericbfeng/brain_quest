@@ -4,11 +4,14 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { connect } from "react-redux";
-import { Button } from '@mui/material';
 import { updateTab } from "../actions/sessionActions";
+import { useNavigate } from "react-router-dom";
+
 import '../styles/HomePage.css';
 
 function HomePage({userInfo, tabValue, updateTab}) {  
+  const navigate = useNavigate();
+
   const GetProfilePrompt = () => {
     return (
       <div className="home-page-prompt-subcontainer">
@@ -16,11 +19,8 @@ function HomePage({userInfo, tabValue, updateTab}) {
           Visit this page to see your profile page to check in on your progress and friends
         </div>
         <div className="home-page-prompt-page-link">
-        <Link to={"/profilepage/" + userInfo.username}>
-        <Button variant="contained">
-        Visit Page
-        </Button>
-        </Link>
+        
+        <button className="home-page-button" onClick={() => {navigate("/profilepage/" + userInfo.username)}}>Visit Page</button>
         </div>
       </div>
     )
@@ -33,11 +33,7 @@ function HomePage({userInfo, tabValue, updateTab}) {
         Visit this page to see the community page! Chat with new friends and find users!
         </div>
         <div className="home-page-prompt-page-link">
-          <Link to={"/communitypage"}>
-          <Button variant="contained">
-        Visit Page
-        </Button>
-          </Link>
+          <button className="home-page-button" onClick={() => {navigate("/communitypage")}}>Visit Page</button>
         </div>
       </div>
     )
@@ -50,9 +46,7 @@ function HomePage({userInfo, tabValue, updateTab}) {
         Visit this page to see your previous tests and practice solo questions.
         </div>
         <div className="home-page-prompt-page-link">
-          <Link to={"/testbankpage"}>        <Button variant="contained">
-        Visit Page
-        </Button></Link>
+          <button className="home-page-button" onClick={() => {navigate("/testbankpage")}}>Visit Page</button>
         </div>
       </div>
     )
@@ -65,9 +59,7 @@ function HomePage({userInfo, tabValue, updateTab}) {
         Visit this page to create a team and start practicing together!
         </div>
         <div className="home-page-prompt-page-link">
-          <Link to={"/teampage"}>        <Button variant="contained">
-        Visit Page
-        </Button></Link>
+          <button className="home-page-button" onClick={() => {navigate("/teampage")}}>Visit Page</button>
         </div>
       </div>
     )
@@ -80,9 +72,7 @@ function HomePage({userInfo, tabValue, updateTab}) {
         Visit this page to sharpen your coding skills! 
         </div>
         <div className="home-page-prompt-page-link">
-          <Link to={"/codeeditorpage"}>        <Button variant="contained">
-        Visit Page
-        </Button></Link>
+          <button className="home-page-button" onClick={() => {navigate("/codeeditorpage")}}>Visit Page</button>
         </div>
       </div>
     )
