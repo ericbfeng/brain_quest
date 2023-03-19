@@ -11,64 +11,102 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import CalculateIcon from '@mui/icons-material/Calculate';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useParams } from "react-router-dom";
-
-function Selector(){
-    const [test, setTest] = React.useState('ACT');
-    
-    
-    const handleChange = (event) => {
-        setTest(event.target.value);
-    };
-
-    return (  
+import { satQuestions, actQuestions, apQuestions, codingQuestions } from '../question_bank/questions';
 
 
-    <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Test</InputLabel>
-        <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={test}
-        label="Test Selection"
-        onChange={handleChange}
-        >
-        <MenuItem value={"ACT"}>ACT</MenuItem>
-        <MenuItem value={"SAT"}>SAT</MenuItem>
-        </Select>
-    </FormControl>
-    );
+function TestTab(subject, val){
+    return(
+    <div>
+        <Tab label={<Stack spacing={2}>
+        <Avatar>
+           {subject[0]}
+       </Avatar>
+           <LinearProgress  value = {val} variant="determinate" />
+           </Stack>} />
+   </div>
+    )
 }
 
 
 
 
-function TestDisplay(){ 
+
+
+function preprocess(test_type){
+    let subjects = {}
+    for(let i = 0; i < test_type.length; i++){
+        let curr_subType = test_type[i].subType
+        if(!(curr_subType in subjects)){
+            subjects[curr_subType] = 0
+        } 
+        subjects[curr_subType] += 1 
+    }
+    return subjects
+}
+
+function parseTest(record, test_info, preprocessed){
+    let res = {}
+    for(const key in preprocessed){
+        res[key] = 0 
+
+    }
+    let seen_subjects = new Set();
+    for(let i = 0; i < record.length; i ++){
+        if(test_info[0] <=  record[i] <=  test_info[1]){
+            let idx = record[i] % 100;
+            let sub_type = test_info[2][idx].subType;
+            if(!(seen_subjects.has(sub_type))){ 
+                seen_subjects.add(sub_type)
+                res[sub_type] = 0;
+            }
+            res[sub_type] +=  (1 * 100)/preprocessed[sub_type];
+            if(res[sub_type] > 100){
+                res[sub_type] = 100; 
+            }
+        }
+    }
+    return res
+}
+
+
+function TestDisplay(props){ 
     const [value, setValue] = React.useState(0);
+    const [tests, setTests] = React.useState({})
     const handleChange = (event, newValue) => {
       setValue(newValue);
     }; 
 
-    /* TODO: Upon loading of the page, want to get user information and and 
-    do calculations to get the progress on each test. 
+    const index_ranges = 
+        {
+        "SAT": [0, 999, satQuestions],
+         "ACT": [1000, 1999, actQuestions],
+        "AP": [2000, 2999, apQuestions],
+        "CODING": [3000, 3999, codingQuestions]
+        };
+
+
+    const { pageUsername } = useParams();
     
     useEffect(() => {
+        
         fetch(`/userByUsername/${pageUsername}`)
         .then(res=> res.json())
-        .then((data) =>{
-            let questions = data[0].record;
-            //for(let i = 0; i < questions.length; i++){
-            //}
-        }).then(error => console.error(error));
-        }, []);
+        .then((data) =>{   
+            let test_info =  index_ranges[props.test];
+            let preprocessed = preprocess(test_info[2]);
+            let record = data[0].record;
+            let test_parsed = parseTest(record, test_info, preprocessed);
+            setTests(test_parsed);
+        }).catch(
+            error => console.error(error));
+        }, [props.test]);
+    
 
-
-    */
+    function generate(obj) {
+        return Object.entries(obj).map(([subject, val]) => TestTab(subject, val));
+     }
 
     return(
     <Box sx={{ maxWidth: { xs: 320, sm: 480 }, bgcolor: 'background.paper' }}>
@@ -78,24 +116,7 @@ function TestDisplay(){
         variant="scrollable"
         scrollButtons="auto"
       >
-        <Tab label={<Stack spacing={2}>
-                <CalculateIcon/>
-                <LinearProgress  value = {0} variant="determinate" />
-                </Stack>} />
-        <Tab label={
-            <Stack spacing={2}>
-            <AutoStoriesIcon/> 
-            <LinearProgress value = {0} variant="determinate" />
-            </Stack>
-        }/>
-        <Tab label={<Stack spacing={2}>
-        <MenuBookIcon/> <LinearProgress  value = {0}  variant="determinate"  />
-        </Stack>} />
-        <Tab label={
-        <Stack spacing={2}>
-            <LightbulbIcon/> <LinearProgress  value = {0} variant="determinate" /> 
-        </Stack> } 
-        />
+        {generate(tests)}
       </Tabs>
     </Box>);
 }
@@ -106,6 +127,10 @@ export default function UserDash() {
     const usrImg = null;
     const { pageUsername } = useParams();
 
+    const [test, setTest] = React.useState('ACT');
+    const handleChange = (event) => {
+        setTest(event.target.value);
+    };
 
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -129,8 +154,23 @@ export default function UserDash() {
                     </Typography> 
                 </Grid>
             </Grid>
-            <Selector/>
-            <TestDisplay/> 
+            
+            <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Test</InputLabel>
+                <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={test}
+                label="Test Selection"
+                onChange={handleChange}
+                >
+                <MenuItem value={"ACT"}>ACT</MenuItem>
+                <MenuItem value={"SAT"}>SAT</MenuItem>
+                <MenuItem value={"AP"}>AP</MenuItem>
+                <MenuItem value={"CODING"}>CODING</MenuItem>
+                </Select>
+            </FormControl>
+            <TestDisplay  test={test}/>
             </Paper>
        
         </Box>

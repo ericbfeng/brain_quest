@@ -28,7 +28,7 @@ export default function SearchBar({data, filterBy, page}) {
     // When a user is clicked on profile page add them as a friend
     async function addFriend(event, setAddButton){
         const friendName = event.target.value;
-        console.log(friendName);
+
 
         // Call API
         const data = { friendName };
@@ -74,7 +74,7 @@ export default function SearchBar({data, filterBy, page}) {
             (
             <div>
                 {filteredData.map((value) => {
-                    if(filterBy == "username") {
+                    if(filterBy === "username") {
                         return <UserLink value={value} page={page} key={value._id} className="search-result"></UserLink> 
                     } else {
                         return <div key={value._id} className="search-result"> {value[filterBy]} </div> 
